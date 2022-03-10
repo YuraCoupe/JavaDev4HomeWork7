@@ -12,11 +12,9 @@ import java.util.stream.Collectors;
 
 public class DeveloperConverter implements Converter<DeveloperDao, DeveloperDto> {
         private final SkillConverter skillConverter;
-        private final ProjectConverter projectConverter;
 
-    public DeveloperConverter(SkillConverter skillConverter, ProjectConverter projectConverter) {
+    public DeveloperConverter(SkillConverter skillConverter) {
         this.skillConverter = skillConverter;
-        this.projectConverter = projectConverter;
     }
 
     @Override
@@ -32,9 +30,6 @@ public class DeveloperConverter implements Converter<DeveloperDao, DeveloperDto>
                 .map(skillDao -> skillConverter.daoToDto(skillDao))
                 .collect(Collectors.toSet());
         developerDto.setSkills(skills);
-        Set<ProjectDto> projects = developerDao.getProjects().stream()
-                .map(projectDao -> projectConverter.daoToDto(projectDao))
-                .collect(Collectors.toSet());
         return developerDto;
     }
 
@@ -51,9 +46,6 @@ public class DeveloperConverter implements Converter<DeveloperDao, DeveloperDto>
                 .map(skillDto -> skillConverter.dtoToDao(skillDto))
                 .collect(Collectors.toSet());
         developerDao.setSkills(skills);
-        Set<ProjectDao> projects = developerDto.getProjects().stream()
-                .map(projectDto -> projectConverter.dtoToDao(projectDto))
-                .collect(Collectors.toSet());
         return developerDao;
     }
 }

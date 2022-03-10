@@ -2,23 +2,26 @@ package ua.goit.projectmanagementsystem.controller;
 
 import ua.goit.projectmanagementsystem.controller.command.Command;
 import ua.goit.projectmanagementsystem.controller.command.Exit;
+import ua.goit.projectmanagementsystem.controller.command.GetSalarySum;
 import ua.goit.projectmanagementsystem.controller.command.Help;
 import ua.goit.projectmanagementsystem.exception.ExitException;
+import ua.goit.projectmanagementsystem.service.ProjectService;
 import ua.goit.projectmanagementsystem.view.View;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class pmsController {
+public class PMSController {
     private final View view;
     private final List<Command> commands;
 
-    public pmsController(View view, List<Command> commands) {
+    public PMSController(View view, ProjectService projectService) {
         this.view = view;
         this.commands = new ArrayList<>(Arrays.asList(
                 new Exit(view),
-                new Help(view)
+                new Help(view),
+                new GetSalarySum(view, projectService)
         ));
     }
 

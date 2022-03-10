@@ -9,11 +9,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class ProjectConverter implements Converter<ProjectDao, ProjectDto> {
-    private final DeveloperConverter developerConverter;
-
-    public ProjectConverter(DeveloperConverter developerConverter) {
-        this.developerConverter = developerConverter;
-    }
 
     @Override
     public ProjectDto daoToDto(ProjectDao projectDao) {
@@ -23,10 +18,6 @@ public class ProjectConverter implements Converter<ProjectDao, ProjectDto> {
         projectDto.setCompanyId(projectDao.getCompanyId());
         projectDto.setCustomerId(projectDao.getCustomerId());
         projectDto.setProjectCost(projectDao.getProjectCost());
-        Set<DeveloperDto> developers = projectDao.getDevelopers().stream()
-                .map(developerDao -> developerConverter.daoToDto(developerDao))
-                .collect(Collectors.toSet());
-        projectDto.setDevelopers(developers);
         return projectDto;
     }
 
@@ -38,10 +29,6 @@ public class ProjectConverter implements Converter<ProjectDao, ProjectDto> {
         projectDao.setCompanyId(projectDto.getCompanyId());
         projectDao.setCustomerId(projectDto.getCustomerId());
         projectDao.setProjectCost(projectDto.getProjectCost());
-        Set<DeveloperDao> developers = projectDto.getDevelopers().stream()
-                .map(developerDto -> developerConverter.dtoToDao(developerDto))
-                .collect(Collectors.toSet());
-        projectDao.setDevelopers(developers);
         return projectDao;
     }
 }

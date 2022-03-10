@@ -17,7 +17,7 @@ public class PostgresHikariProvider implements DatabaseManager{
         config.setUsername(username);
         config.setPassword(password);
         config.setMaximumPoolSize(10);
-        config.setConnectionTimeout(100);
+        config.setConnectionTimeout(250);
         this.dataSource = new HikariDataSource(config);
     }
 

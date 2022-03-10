@@ -7,7 +7,7 @@ import java.util.Properties;
 public class PropertiesUtil {
     private Properties properties = null;
 
-    private PropertiesUtil() {
+    public PropertiesUtil() {
         load();
     }
 
@@ -19,8 +19,8 @@ public class PropertiesUtil {
         return properties.getProperty("database.schema");
     }
 
-    public String getPort() {
-        return properties.getProperty("database.port");
+    public Integer getPort() {
+        return Integer.parseInt(properties.getProperty("database.port"));
     }
 
     public String getUser() {
