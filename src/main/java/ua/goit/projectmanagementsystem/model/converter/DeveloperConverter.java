@@ -24,6 +24,7 @@ public class DeveloperConverter implements Converter<DeveloperDao, DeveloperDto>
         developerDto.setFirstname(developerDao.getFirstname());
         developerDto.setLastname(developerDao.getLastname());
         developerDto.setAge(developerDao.getAge());
+        developerDto.setSex(developerDao.getSex());
         developerDto.setSalary(developerDao.getSalary());
         developerDto.setCompanyId(developerDao.getCompanyId());
         Set<SkillDto> skills = developerDao.getSkills().stream()
@@ -40,6 +41,7 @@ public class DeveloperConverter implements Converter<DeveloperDao, DeveloperDto>
         developerDao.setFirstname(developerDto.getFirstname());
         developerDao.setLastname(developerDto.getLastname());
         developerDao.setAge(developerDto.getAge());
+        developerDao.setSex(developerDto.getSex());
         developerDao.setSalary(developerDto.getSalary());
         developerDao.setCompanyId(developerDto.getCompanyId());
         Set<SkillDao> skills = developerDto.getSkills().stream()

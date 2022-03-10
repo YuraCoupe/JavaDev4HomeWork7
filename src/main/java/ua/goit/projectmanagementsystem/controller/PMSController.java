@@ -1,9 +1,6 @@
 package ua.goit.projectmanagementsystem.controller;
 
-import ua.goit.projectmanagementsystem.controller.command.Command;
-import ua.goit.projectmanagementsystem.controller.command.Exit;
-import ua.goit.projectmanagementsystem.controller.command.GetSalarySum;
-import ua.goit.projectmanagementsystem.controller.command.Help;
+import ua.goit.projectmanagementsystem.controller.command.*;
 import ua.goit.projectmanagementsystem.exception.ExitException;
 import ua.goit.projectmanagementsystem.service.ProjectService;
 import ua.goit.projectmanagementsystem.view.View;
@@ -21,7 +18,8 @@ public class PMSController {
         this.commands = new ArrayList<>(Arrays.asList(
                 new Exit(view),
                 new Help(view),
-                new GetSalarySum(view, projectService)
+                new GetSalarySum(view, projectService),
+                new FindDevsByProject(view, projectService)
         ));
     }
 

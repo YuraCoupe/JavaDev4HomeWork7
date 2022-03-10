@@ -8,7 +8,7 @@ public class SkillConverter implements Converter<SkillDao, SkillDto> {
     public SkillDto daoToDto(SkillDao skillDao) {
         SkillDto skillDto = new SkillDto();
         skillDto.setSkillId(skillDao.getSkillId());
-        skillDto.setLevel(skillDto.getLevel());
+        skillDto.setLevel(skillDao.getLevel());
         skillDto.setSpecialization(skillDao.getSpecialization());
         return skillDto;
     }
