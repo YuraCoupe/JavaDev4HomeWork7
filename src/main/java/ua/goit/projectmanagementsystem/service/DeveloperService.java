@@ -30,4 +30,13 @@ public class DeveloperService {
                 .collect(Collectors.toSet());
         return developersDto;
     }
+
+    public Set<DeveloperDto> findMiddleDevelopers() {
+        Set<DeveloperDao> developersDao = developerRepository.findMiddleDevs().orElseThrow(()
+                -> new DeveloperNotFoundException("Middle developers do not find"));
+        Set<DeveloperDto> developersDto = developersDao.stream()
+                .map(developerDao -> developerConverter.daoToDto(developerDao))
+                .collect(Collectors.toSet());
+        return developersDto;
+    }
 }

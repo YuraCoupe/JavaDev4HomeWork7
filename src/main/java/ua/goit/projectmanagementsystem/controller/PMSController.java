@@ -21,7 +21,8 @@ public class PMSController {
                 new Help(view),
                 new GetSalarySum(view, projectService),
                 new FindDevsByProject(view, projectService),
-                new FindJavaDevs(view, developerService)
+                new FindJavaDevs(view, developerService),
+                new FindMiddleDevs(view, developerService)
         ));
     }
 
