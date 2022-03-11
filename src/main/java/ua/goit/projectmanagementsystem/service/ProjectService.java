@@ -29,10 +29,9 @@ public class ProjectService {
     }
 
     public Set<DeveloperDto> findDevsByProjectId(Integer projectId) {
-        Set<DeveloperDto> developersDto = new HashSet<>();
         Set<DeveloperDao> developersDao = projectRepository.findDevsByProjectId(projectId).orElseThrow(()
                 -> new ProjectNotFoundException(String.format("Project with ID %d does not exist", projectId)));
-        developersDto = developersDao.stream()
+        Set<DeveloperDto> developersDto = developersDao.stream()
                 .map(developerDao -> developerConverter.daoToDto(developerDao))
                 .collect(Collectors.toSet());
         return developersDto;

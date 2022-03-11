@@ -8,7 +8,9 @@ import ua.goit.projectmanagementsystem.model.converter.DeveloperConverter;
 import ua.goit.projectmanagementsystem.model.converter.DeveloperProjectConverter;
 import ua.goit.projectmanagementsystem.model.converter.ProjectConverter;
 import ua.goit.projectmanagementsystem.model.converter.SkillConverter;
+import ua.goit.projectmanagementsystem.repository.DeveloperRepository;
 import ua.goit.projectmanagementsystem.repository.ProjectRepository;
+import ua.goit.projectmanagementsystem.service.DeveloperService;
 import ua.goit.projectmanagementsystem.service.ProjectService;
 import ua.goit.projectmanagementsystem.view.Console;
 import ua.goit.projectmanagementsystem.view.View;
@@ -23,6 +25,7 @@ public class Application {
                 util.getSchema(), util.getUser(), util.getPassword());
 
         ProjectRepository projectRepository = new ProjectRepository(dbConnector);
+        DeveloperRepository developerRepository = new DeveloperRepository(dbConnector);
 
         SkillConverter skillConverter = new SkillConverter();
         DeveloperConverter developerConverter = new DeveloperConverter(skillConverter);
@@ -30,10 +33,11 @@ public class Application {
         DeveloperProjectConverter developerProjectConverter = new DeveloperProjectConverter(developerConverter, projectConverter);
 
         ProjectService projectService = new ProjectService(projectRepository, developerConverter, developerProjectConverter);
+        DeveloperService developerService = new DeveloperService(developerRepository, developerConverter, developerProjectConverter);
 
         View view = new Console();
 
-        PMSController pmsController = new PMSController(view, projectService);
+        PMSController pmsController = new PMSController(view, projectService, developerService);
         pmsController.run();
     }
 }

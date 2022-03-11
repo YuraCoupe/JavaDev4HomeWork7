@@ -123,7 +123,7 @@ public class DeveloperDao {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         DeveloperDao that = (DeveloperDao) o;
-        return developerId.equals(that.developerId) && firstname.equals(that.firstname) && lastname.equals(that.lastname) && Objects.equals(age, that.age) && sex.equals(that.sex) && companyId.equals(that.companyId) && salary.equals(that.salary) && skills.equals(that.skills) && projects.equals(that.projects);
+        return developerId.equals(that.developerId) && firstname.equals(that.firstname) && lastname.equals(that.lastname) && Objects.equals(age, that.age) && sex.equals(that.sex) && companyId.equals(that.companyId) && salary.equals(that.salary);
     }
 
     @Override
