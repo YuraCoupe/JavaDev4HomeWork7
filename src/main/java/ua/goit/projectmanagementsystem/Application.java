@@ -32,7 +32,7 @@ public class Application {
         ProjectConverter projectConverter = new ProjectConverter();
         DeveloperProjectConverter developerProjectConverter = new DeveloperProjectConverter(developerConverter, projectConverter);
 
-        ProjectService projectService = new ProjectService(projectRepository, developerConverter, developerProjectConverter);
+        ProjectService projectService = new ProjectService(projectRepository, developerConverter, projectConverter, developerProjectConverter);
         DeveloperService developerService = new DeveloperService(developerRepository, developerConverter, developerProjectConverter);
 
         View view = new Console();

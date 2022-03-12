@@ -4,15 +4,14 @@ import ua.goit.projectmanagementsystem.config.DatabaseManager;
 import ua.goit.projectmanagementsystem.exception.DeveloperNotFoundException;
 import ua.goit.projectmanagementsystem.exception.ProjectNotFoundException;
 import ua.goit.projectmanagementsystem.model.dao.DeveloperDao;
+import ua.goit.projectmanagementsystem.model.dao.ProjectDao;
 import ua.goit.projectmanagementsystem.model.dao.SkillDao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 public class ProjectRepository {
 
@@ -31,6 +30,12 @@ public class ProjectRepository {
             "JOIN developers d ON dtp.developer_id = d.developer_id \n" +
             "WHERE pr.project_id = ?";
 
+    private final static String FIND_ALL_PROJECTS =
+            "SELECT dtp.project_id, p.project_name, p.company_id, p.customer_id, p.project_cost, COUNT(d.developer_id) as developers_number\n" +
+            "FROM developerstoprojects dtp\n" +
+            "JOIN developers d ON dtp.developer_id = d.developer_id\n" +
+            "JOIN projects p ON dtp.project_id = p.project_id\n" +
+            "GROUP BY dtp.project_id, p.project_name, p.company_id, p.customer_id, p.project_cost";
 
     private final DatabaseManager databaseManager;
 
@@ -71,6 +76,45 @@ public class ProjectRepository {
                 developers.add(developerDao);
             }
             return Optional.ofNullable(developers);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return Optional.empty();
+    }
+    public Optional<Set<ProjectDao>> findAllProjects() {
+        try (Connection connection = databaseManager.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(FIND_ALL_PROJECTS)) {
+            ResultSet resultSet = preparedStatement.executeQuery();
+            Set<ProjectDao> projects = new HashSet<>();
+            while (resultSet.next()) {
+                ProjectDao projectDao = new ProjectDao();
+                projectDao.setProjectId(resultSet.getInt("project_id"));
+                projectDao.setProjectName(resultSet.getString("project_name"));
+                projectDao.setCompanyId(resultSet.getInt("company_id"));
+                projectDao.setCustomerId(resultSet.getInt("customer_id"));
+                projectDao.setProjectCost(resultSet.getInt("project_cost"));
+                projects.add(projectDao);
+            }
+            return Optional.ofNullable(projects);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return Optional.empty();
+    }
+
+    public Optional<HashMap<ProjectDao, Integer>> findAllProjectsWithDevelopersNumber () {
+        try (Connection connection = databaseManager.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(FIND_ALL_PROJECTS)) {
+            ResultSet resultSet = preparedStatement.executeQuery();
+            HashMap<ProjectDao, Integer> projects = new HashMap<>();
+            while (resultSet.next()) {
+                ProjectDao projectDao = new ProjectDao();
+                projectDao.setProjectId(resultSet.getInt("project_id"));
+                projectDao.setProjectName(resultSet.getString("project_name"));
+                projectDao.setCompanyId(resultSet.getInt("company_id"));
+                projectDao.setCustomerId(resultSet.getInt("customer_id"));
+                projectDao.setProjectCost(resultSet.getInt("project_cost"));
+                projects.put(projectDao, resultSet.getInt("developers_number"));
+            }
+            return Optional.ofNullable(projects);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
