@@ -1,5 +1,6 @@
 package ua.goit.projectmanagementsystem.controller.command;
 
+import org.postgresql.util.PSQLException;
 import ua.goit.projectmanagementsystem.model.dto.CompanyDto;
 import ua.goit.projectmanagementsystem.service.CompanyService;
 import ua.goit.projectmanagementsystem.view.View;
@@ -35,6 +36,8 @@ public class CompanyDeleter implements Command {
 
         CompanyDto company = companyService.findByName(name);
         companyService.delete(company);
-        view.write(String.format("Company %s deleted from database", name));
+        if(!companyService.isCompanyExist(name)) {
+            view.write(String.format("Company %s deleted from database", name));
+        }
     }
 }
