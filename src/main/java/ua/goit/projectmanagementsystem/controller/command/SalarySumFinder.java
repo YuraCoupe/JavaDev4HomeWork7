@@ -3,15 +3,13 @@ package ua.goit.projectmanagementsystem.controller.command;
 import ua.goit.projectmanagementsystem.service.ProjectService;
 import ua.goit.projectmanagementsystem.view.View;
 
-import java.sql.Struct;
-
 import static ua.goit.projectmanagementsystem.controller.command.Commands.GET_SALARY_SUM_BY_PROJECT_ID;
 
-public class GetSalarySum implements Command {
+public class SalarySumFinder implements Command {
     private final View view;
     private final ProjectService projectService;
 
-    public GetSalarySum(View view, ProjectService projectService) {
+    public SalarySumFinder(View view, ProjectService projectService) {
         this.view = view;
         this.projectService = projectService;
     }

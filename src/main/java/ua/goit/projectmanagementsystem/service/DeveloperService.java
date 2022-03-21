@@ -1,7 +1,6 @@
 package ua.goit.projectmanagementsystem.service;
 
 import ua.goit.projectmanagementsystem.exception.DeveloperNotFoundException;
-import ua.goit.projectmanagementsystem.exception.ProjectNotFoundException;
 import ua.goit.projectmanagementsystem.model.converter.DeveloperConverter;
 import ua.goit.projectmanagementsystem.model.converter.DeveloperProjectConverter;
 import ua.goit.projectmanagementsystem.model.dao.DeveloperDao;

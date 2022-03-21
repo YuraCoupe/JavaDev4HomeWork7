@@ -6,26 +6,26 @@ import ua.goit.projectmanagementsystem.view.View;
 
 import java.util.Set;
 
-import static ua.goit.projectmanagementsystem.controller.command.Commands.FIND_JAVA_DEVELOPERS;
+import static ua.goit.projectmanagementsystem.controller.command.Commands.FIND_MIDDLE_DEVELOPERS;
 
-public class FindJavaDevs implements Command{
+public class MiddleDevsFinder implements Command{
     private final View view;
     private final DeveloperService developerService;
 
-    public FindJavaDevs(View view, DeveloperService developerService) {
+    public MiddleDevsFinder(View view, DeveloperService developerService) {
         this.view = view;
         this.developerService = developerService;
     }
 
     @Override
     public boolean canProccess(String input) {
-        return input.equals(FIND_JAVA_DEVELOPERS.getName());
+        return input.equals(FIND_MIDDLE_DEVELOPERS.getName());
     }
 
     @Override
     public void process() {
-        Set<DeveloperDto> developers = developerService.findJavaDevelopers();
-        view.write("Java developers list:");
+        Set<DeveloperDto> developers = developerService.findMiddleDevelopers();
+        view.write("Middle developers list:");
         developers.stream()
                 .forEach(developer -> view.write(developer.toString()));
         view.write("\n");

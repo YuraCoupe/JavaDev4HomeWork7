@@ -4,12 +4,11 @@ import ua.goit.projectmanagementsystem.config.DatabaseManager;
 import ua.goit.projectmanagementsystem.config.PostgresHikariProvider;
 import ua.goit.projectmanagementsystem.config.PropertiesUtil;
 import ua.goit.projectmanagementsystem.controller.PMSController;
-import ua.goit.projectmanagementsystem.model.converter.DeveloperConverter;
-import ua.goit.projectmanagementsystem.model.converter.DeveloperProjectConverter;
-import ua.goit.projectmanagementsystem.model.converter.ProjectConverter;
-import ua.goit.projectmanagementsystem.model.converter.SkillConverter;
+import ua.goit.projectmanagementsystem.model.converter.*;
+import ua.goit.projectmanagementsystem.repository.CompanyRepository;
 import ua.goit.projectmanagementsystem.repository.DeveloperRepository;
 import ua.goit.projectmanagementsystem.repository.ProjectRepository;
+import ua.goit.projectmanagementsystem.service.CompanyService;
 import ua.goit.projectmanagementsystem.service.DeveloperService;
 import ua.goit.projectmanagementsystem.service.ProjectService;
 import ua.goit.projectmanagementsystem.view.Console;
@@ -26,18 +25,21 @@ public class Application {
 
         ProjectRepository projectRepository = new ProjectRepository(dbConnector);
         DeveloperRepository developerRepository = new DeveloperRepository(dbConnector);
+        CompanyRepository companyRepository = new CompanyRepository(dbConnector);
 
         SkillConverter skillConverter = new SkillConverter();
         DeveloperConverter developerConverter = new DeveloperConverter(skillConverter);
         ProjectConverter projectConverter = new ProjectConverter();
         DeveloperProjectConverter developerProjectConverter = new DeveloperProjectConverter(developerConverter, projectConverter);
+        CompanyConverter companyConverter = new CompanyConverter();
 
         ProjectService projectService = new ProjectService(projectRepository, developerConverter, projectConverter, developerProjectConverter);
         DeveloperService developerService = new DeveloperService(developerRepository, developerConverter, developerProjectConverter);
+        CompanyService companyService = new CompanyService(companyRepository, companyConverter);
 
         View view = new Console();
 
-        PMSController pmsController = new PMSController(view, projectService, developerService);
+        PMSController pmsController = new PMSController(view, projectService, developerService, companyService);
         pmsController.run();
     }
 }

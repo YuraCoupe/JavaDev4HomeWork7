@@ -8,12 +8,12 @@ import java.util.Set;
 
 import static ua.goit.projectmanagementsystem.controller.command.Commands.FIND_DEVELOPERS_BY_PROJECT_ID;
 
-public class FindDevsByProject implements Command{
+public class DevsByProjectFinder implements Command{
 
     private final View view;
     private final ProjectService projectService;
 
-    public FindDevsByProject(View view, ProjectService projectService) {
+    public DevsByProjectFinder(View view, ProjectService projectService) {
         this.view = view;
         this.projectService = projectService;
     }

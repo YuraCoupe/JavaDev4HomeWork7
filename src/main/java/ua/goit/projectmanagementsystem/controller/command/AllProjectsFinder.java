@@ -1,21 +1,18 @@
 package ua.goit.projectmanagementsystem.controller.command;
 
-import ua.goit.projectmanagementsystem.model.dto.DeveloperDto;
 import ua.goit.projectmanagementsystem.model.dto.ProjectDto;
 import ua.goit.projectmanagementsystem.service.ProjectService;
 import ua.goit.projectmanagementsystem.view.View;
 
-import java.lang.reflect.GenericDeclaration;
 import java.util.HashMap;
-import java.util.Set;
 
 import static ua.goit.projectmanagementsystem.controller.command.Commands.FIND_ALL_PROJECTS;
 
-public class FindAllProjects implements Command {
+public class AllProjectsFinder implements Command {
     private final View view;
     private final ProjectService projectService;
 
-    public FindAllProjects(View view, ProjectService projectService) {
+    public AllProjectsFinder(View view, ProjectService projectService) {
         this.view = view;
         this.projectService = projectService;
     }
