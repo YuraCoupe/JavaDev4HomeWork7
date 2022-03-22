@@ -1,11 +1,9 @@
 package ua.goit.projectmanagementsystem.controller.command;
 
-import org.postgresql.util.PSQLException;
 import ua.goit.projectmanagementsystem.model.dto.CompanyDto;
 import ua.goit.projectmanagementsystem.service.CompanyService;
 import ua.goit.projectmanagementsystem.view.View;
 
-import static ua.goit.projectmanagementsystem.controller.command.Commands.ADD_COMPANY;
 import static ua.goit.projectmanagementsystem.controller.command.Commands.DELETE_COMPANY;
 
 public class CompanyDeleter implements Command {
@@ -18,7 +16,7 @@ public class CompanyDeleter implements Command {
     }
 
     @Override
-    public boolean canProccess(String input) {
+    public boolean canProcess(String input) {
         return input.equals(DELETE_COMPANY.getName());
     }
 

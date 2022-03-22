@@ -1,6 +1,5 @@
 package ua.goit.projectmanagementsystem.repository;
 
-import org.postgresql.util.PSQLException;
 import ua.goit.projectmanagementsystem.config.DatabaseManager;
 import ua.goit.projectmanagementsystem.model.dao.CompanyDao;
 

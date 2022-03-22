@@ -18,7 +18,7 @@ public class JavaDevsFinder implements Command{
     }
 
     @Override
-    public boolean canProccess(String input) {
+    public boolean canProcess(String input) {
         return input.equals(FIND_JAVA_DEVELOPERS.getName());
     }
 

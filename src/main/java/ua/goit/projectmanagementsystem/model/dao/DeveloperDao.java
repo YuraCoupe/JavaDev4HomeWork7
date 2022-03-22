@@ -1,8 +1,5 @@
 package ua.goit.projectmanagementsystem.model.dao;
 
-import ua.goit.projectmanagementsystem.model.dto.ProjectDto;
-import ua.goit.projectmanagementsystem.model.dto.SkillDto;
-
 import java.util.Objects;
 import java.util.Set;
 

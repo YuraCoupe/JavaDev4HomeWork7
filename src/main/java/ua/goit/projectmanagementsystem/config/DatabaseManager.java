@@ -1,6 +1,5 @@
 package ua.goit.projectmanagementsystem.config;
 
-import java.net.ConnectException;
 import java.sql.Connection;
 import java.sql.SQLException;
 

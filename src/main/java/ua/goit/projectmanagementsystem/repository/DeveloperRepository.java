@@ -5,7 +5,6 @@ import ua.goit.projectmanagementsystem.exception.DeveloperNotFoundException;
 import ua.goit.projectmanagementsystem.model.dao.DeveloperDao;
 import ua.goit.projectmanagementsystem.model.dao.SkillDao;
 
-import javax.xml.crypto.Data;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

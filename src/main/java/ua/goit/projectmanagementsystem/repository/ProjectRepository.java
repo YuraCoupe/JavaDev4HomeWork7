@@ -2,7 +2,6 @@ package ua.goit.projectmanagementsystem.repository;
 
 import ua.goit.projectmanagementsystem.config.DatabaseManager;
 import ua.goit.projectmanagementsystem.exception.DeveloperNotFoundException;
-import ua.goit.projectmanagementsystem.exception.ProjectNotFoundException;
 import ua.goit.projectmanagementsystem.model.dao.DeveloperDao;
 import ua.goit.projectmanagementsystem.model.dao.ProjectDao;
 import ua.goit.projectmanagementsystem.model.dao.SkillDao;

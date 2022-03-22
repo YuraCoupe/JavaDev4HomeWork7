@@ -1,15 +1,15 @@
 package ua.goit.projectmanagementsystem.controller.command;
 
 public enum Commands {
-    ADD_COMPANY("addcompany"),
-    DELETE_COMPANY("deletecompany"),
-    UPDATE_COMPANY("updatecompany"),
-    FIND_COMPANY_BY_NAME("findcompany"),
-    GET_SALARY_SUM_BY_PROJECT_ID("getsalarysum"),
-    FIND_DEVELOPERS_BY_PROJECT_ID("finddevsbyproject"),
-    FIND_JAVA_DEVELOPERS("findjavadevs"),
-    FIND_MIDDLE_DEVELOPERS("findmiddledevs"),
-    FIND_ALL_PROJECTS("findallprojects"),
+    ADD_COMPANY("1"),
+    DELETE_COMPANY("2"),
+    UPDATE_COMPANY("3"),
+    FIND_COMPANY_BY_NAME("4"),
+    GET_SALARY_SUM_BY_PROJECT_ID("5"),
+    FIND_DEVELOPERS_BY_PROJECT_ID("6"),
+    FIND_JAVA_DEVELOPERS("7"),
+    FIND_MIDDLE_DEVELOPERS("8"),
+    FIND_ALL_PROJECTS("9"),
     EXIT("exit"),
     HELP("help");
 

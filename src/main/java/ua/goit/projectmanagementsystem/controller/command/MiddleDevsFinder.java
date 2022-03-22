@@ -18,7 +18,7 @@ public class MiddleDevsFinder implements Command{
     }
 
     @Override
-    public boolean canProccess(String input) {
+    public boolean canProcess(String input) {
         return input.equals(FIND_MIDDLE_DEVELOPERS.getName());
     }
 

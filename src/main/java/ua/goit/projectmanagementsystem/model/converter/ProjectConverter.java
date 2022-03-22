@@ -1,12 +1,7 @@
 package ua.goit.projectmanagementsystem.model.converter;
 
-import ua.goit.projectmanagementsystem.model.dao.DeveloperDao;
 import ua.goit.projectmanagementsystem.model.dao.ProjectDao;
-import ua.goit.projectmanagementsystem.model.dto.DeveloperDto;
 import ua.goit.projectmanagementsystem.model.dto.ProjectDto;
-
-import java.util.Set;
-import java.util.stream.Collectors;
 
 public class ProjectConverter implements Converter<ProjectDao, ProjectDto> {
 

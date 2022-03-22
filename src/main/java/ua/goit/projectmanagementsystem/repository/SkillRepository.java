@@ -1,7 +1,6 @@
 package ua.goit.projectmanagementsystem.repository;
 
 import ua.goit.projectmanagementsystem.config.DatabaseManager;
-import ua.goit.projectmanagementsystem.model.dao.DeveloperDao;
 import ua.goit.projectmanagementsystem.model.dao.SkillDao;
 
 import java.sql.Connection;

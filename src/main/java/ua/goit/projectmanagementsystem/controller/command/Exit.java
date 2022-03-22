@@ -13,7 +13,7 @@ public class Exit implements Command {
     }
 
     @Override
-    public boolean canProccess(String input) {
+    public boolean canProcess(String input) {
         return input.equals(EXIT.getName());
     }
 

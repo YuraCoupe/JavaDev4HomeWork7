@@ -14,8 +14,6 @@ import ua.goit.projectmanagementsystem.service.ProjectService;
 import ua.goit.projectmanagementsystem.view.Console;
 import ua.goit.projectmanagementsystem.view.View;
 
-import javax.crypto.CipherInputStream;
-
 public class Application {
     public static void main(String[] args) {
         PropertiesUtil util = new PropertiesUtil();

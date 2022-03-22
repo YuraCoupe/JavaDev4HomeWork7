@@ -1,10 +1,8 @@
 package ua.goit.projectmanagementsystem.model.converter;
 
 import ua.goit.projectmanagementsystem.model.dao.DeveloperDao;
-import ua.goit.projectmanagementsystem.model.dao.ProjectDao;
 import ua.goit.projectmanagementsystem.model.dao.SkillDao;
 import ua.goit.projectmanagementsystem.model.dto.DeveloperDto;
-import ua.goit.projectmanagementsystem.model.dto.ProjectDto;
 import ua.goit.projectmanagementsystem.model.dto.SkillDto;
 
 import java.util.Set;

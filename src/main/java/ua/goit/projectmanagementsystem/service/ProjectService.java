@@ -11,8 +11,6 @@ import ua.goit.projectmanagementsystem.model.dto.ProjectDto;
 import ua.goit.projectmanagementsystem.repository.ProjectRepository;
 
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 

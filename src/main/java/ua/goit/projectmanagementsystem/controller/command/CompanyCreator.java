@@ -2,11 +2,9 @@ package ua.goit.projectmanagementsystem.controller.command;
 
 import ua.goit.projectmanagementsystem.model.dto.CompanyDto;
 import ua.goit.projectmanagementsystem.service.CompanyService;
-import ua.goit.projectmanagementsystem.service.ProjectService;
 import ua.goit.projectmanagementsystem.view.View;
 
 import static ua.goit.projectmanagementsystem.controller.command.Commands.ADD_COMPANY;
-import static ua.goit.projectmanagementsystem.controller.command.Commands.GET_SALARY_SUM_BY_PROJECT_ID;
 
 public class CompanyCreator implements Command {
     private final View view;
@@ -18,7 +16,7 @@ public class CompanyCreator implements Command {
     }
 
     @Override
-    public boolean canProccess(String input) {
+    public boolean canProcess(String input) {
         return input.equals(ADD_COMPANY.getName());
     }
 

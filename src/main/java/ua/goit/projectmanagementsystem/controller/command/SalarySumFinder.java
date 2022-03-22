@@ -15,7 +15,7 @@ public class SalarySumFinder implements Command {
     }
 
     @Override
-    public boolean canProccess(String input) {
+    public boolean canProcess(String input) {
         return input.equals(GET_SALARY_SUM_BY_PROJECT_ID.getName());
     }
 

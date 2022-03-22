@@ -44,7 +44,7 @@ public class PMSController {
                 String input = view.read();
                 boolean isIncorrectCommand = true;
                 for (Command command : commands) {
-                    if (command.canProccess(input)) {
+                    if (command.canProcess(input)) {
                         command.process();
                         isIncorrectCommand = false;
                     }
