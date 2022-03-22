@@ -40,7 +40,7 @@ public class PMSController {
     private void executeCommand() {
         try {
             while (true) {
-                view.write("Please, enter help to see available commands");
+                view.write("Please, enter command or enter help to see available commands");
                 String input = view.read();
                 boolean isIncorrectCommand = true;
                 for (Command command : commands) {
