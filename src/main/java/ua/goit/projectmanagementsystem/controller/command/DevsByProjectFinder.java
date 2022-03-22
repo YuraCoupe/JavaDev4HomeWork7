@@ -1,6 +1,6 @@
 package ua.goit.projectmanagementsystem.controller.command;
 
-import ua.goit.projectmanagementsystem.model.dto.DeveloperDto;
+import ua.goit.projectmanagementsystem.model.dto.DeveloperShortDto;
 import ua.goit.projectmanagementsystem.service.ProjectService;
 import ua.goit.projectmanagementsystem.view.View;
 
@@ -35,7 +35,7 @@ public class DevsByProjectFinder implements Command{
                 view.write("Please, write correct ID");
             }
         }
-        Set<DeveloperDto> developers = projectService.findDevsByProjectId(projectId);
+        Set<DeveloperShortDto> developers = projectService.findDevsByProjectId(projectId);
 
         view.write("Project with ID " + projectId + " developers list:");
 

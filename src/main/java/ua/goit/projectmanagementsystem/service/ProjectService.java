@@ -3,10 +3,12 @@ package ua.goit.projectmanagementsystem.service;
 import ua.goit.projectmanagementsystem.exception.ProjectNotFoundException;
 import ua.goit.projectmanagementsystem.model.converter.DeveloperConverter;
 import ua.goit.projectmanagementsystem.model.converter.DeveloperProjectConverter;
+import ua.goit.projectmanagementsystem.model.converter.DeveloperShortConverter;
 import ua.goit.projectmanagementsystem.model.converter.ProjectConverter;
 import ua.goit.projectmanagementsystem.model.dao.DeveloperDao;
 import ua.goit.projectmanagementsystem.model.dao.ProjectDao;
 import ua.goit.projectmanagementsystem.model.dto.DeveloperDto;
+import ua.goit.projectmanagementsystem.model.dto.DeveloperShortDto;
 import ua.goit.projectmanagementsystem.model.dto.ProjectDto;
 import ua.goit.projectmanagementsystem.repository.ProjectRepository;
 
@@ -17,13 +19,15 @@ import java.util.stream.Collectors;
 public class ProjectService {
     private final ProjectRepository projectRepository;
     private final DeveloperConverter developerConverter;
+    private final DeveloperShortConverter developerShortConverter;
     private final ProjectConverter projectConverter;
     private final DeveloperProjectConverter developerProjectConverter;
 
-    public ProjectService(ProjectRepository projectRepository, DeveloperConverter developerConverter, ProjectConverter projectConverter, DeveloperProjectConverter developerProjectConverter) {
+    public ProjectService(ProjectRepository projectRepository, DeveloperShortConverter developerShortConverter, DeveloperConverter developerConverter, ProjectConverter projectConverter, DeveloperProjectConverter developerProjectConverter) {
         this.projectRepository = projectRepository;
         this.developerProjectConverter = developerProjectConverter;
         this.developerConverter = developerConverter;
+        this.developerShortConverter = developerShortConverter;
         this.projectConverter = projectConverter;
     }
 
@@ -32,13 +36,13 @@ public class ProjectService {
                 -> new ProjectNotFoundException(String.format("Project with ID %d does not exist", projectId)));
     }
 
-    public Set<DeveloperDto> findDevsByProjectId(Integer projectId) {
+    public Set<DeveloperShortDto> findDevsByProjectId(Integer projectId) {
         Set<DeveloperDao> developersDao = projectRepository.findDevsByProjectId(projectId).orElseThrow(()
                 -> new ProjectNotFoundException(String.format("Project with ID %d does not exist", projectId)));
-        Set<DeveloperDto> developersDto = developersDao.stream()
-                .map(developerDao -> developerConverter.daoToDto(developerDao))
+        Set<DeveloperShortDto> developersShortDto = developersDao.stream()
+                .map(developerDao -> developerShortConverter.daoToDto(developerDao))
                 .collect(Collectors.toSet());
-        return developersDto;
+        return developersShortDto;
     }
 
     public Set<ProjectDto> findAllProjects() {
