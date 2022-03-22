@@ -1,7 +1,6 @@
 package ua.goit.projectmanagementsystem.model.dto;
 
 import java.util.Objects;
-import java.util.Set;
 
 public class ProjectShortDto {
     private String projectName;

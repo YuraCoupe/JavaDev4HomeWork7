@@ -1,11 +1,9 @@
 package ua.goit.projectmanagementsystem.controller.command;
 
-import ua.goit.projectmanagementsystem.model.dto.ProjectDto;
 import ua.goit.projectmanagementsystem.model.dto.ProjectShortDto;
 import ua.goit.projectmanagementsystem.service.ProjectService;
 import ua.goit.projectmanagementsystem.view.View;
 
-import java.util.HashMap;
 import java.util.Set;
 
 import static ua.goit.projectmanagementsystem.controller.command.Commands.FIND_ALL_PROJECTS;

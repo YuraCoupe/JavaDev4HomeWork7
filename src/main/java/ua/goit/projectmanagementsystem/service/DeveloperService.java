@@ -5,7 +5,6 @@ import ua.goit.projectmanagementsystem.model.converter.DeveloperShortConverter;
 import ua.goit.projectmanagementsystem.model.converter.DeveloperConverter;
 import ua.goit.projectmanagementsystem.model.converter.DeveloperProjectConverter;
 import ua.goit.projectmanagementsystem.model.dao.DeveloperDao;
-import ua.goit.projectmanagementsystem.model.dto.DeveloperDto;
 import ua.goit.projectmanagementsystem.model.dto.DeveloperShortDto;
 import ua.goit.projectmanagementsystem.repository.DeveloperRepository;
 

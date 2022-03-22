@@ -4,14 +4,11 @@ import ua.goit.projectmanagementsystem.exception.ProjectNotFoundException;
 import ua.goit.projectmanagementsystem.model.converter.*;
 import ua.goit.projectmanagementsystem.model.dao.DeveloperDao;
 import ua.goit.projectmanagementsystem.model.dao.ProjectDao;
-import ua.goit.projectmanagementsystem.model.dto.DeveloperDto;
 import ua.goit.projectmanagementsystem.model.dto.DeveloperShortDto;
-import ua.goit.projectmanagementsystem.model.dto.ProjectDto;
 import ua.goit.projectmanagementsystem.model.dto.ProjectShortDto;
 import ua.goit.projectmanagementsystem.repository.ProjectRepository;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -47,20 +44,11 @@ public class ProjectService {
         return developersShortDto;
     }
 
-    public Set<ProjectDto> findAllProjects() {
-        Set<ProjectDao> projectDaos = projectRepository.findAllProjects().orElseThrow(()
-                -> new ProjectNotFoundException("There are no existed projects"));
-        Set<ProjectDto> projectDtos = projectDaos.stream()
-                .map(projectDao -> projectConverter.daoToDto(projectDao))
-                .collect(Collectors.toSet());
-        return projectDtos;
-    }
-
     public Set<ProjectShortDto> findAllProjectsWithDevelopersNumber() {
         HashMap<ProjectDao, Integer> projectDaoMap = projectRepository.findAllProjectsWithDevelopersNumber().orElseThrow(()
                 -> new ProjectNotFoundException("There are no existed projects"));
 
-        Set<ProjectShortDto> projectShortDtos = new HashSet<>();
+        Set<ProjectShortDto> projectShortDtos;
         projectShortDtos = projectDaoMap.entrySet().stream()
                 .map(projectDao -> {
                     ProjectShortDto projectShortDto = new ProjectShortDto();

@@ -10,11 +10,6 @@ public class SkillDao {
     public SkillDao() {
     }
 
-    public SkillDao(String specialization, String level) {
-        this.specialization = specialization;
-        this.level = level;
-    }
-
     public Integer getSkillId() {
         return skillId;
     }

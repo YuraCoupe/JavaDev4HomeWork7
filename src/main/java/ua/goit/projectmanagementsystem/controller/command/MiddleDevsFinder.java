@@ -1,6 +1,5 @@
 package ua.goit.projectmanagementsystem.controller.command;
 
-import ua.goit.projectmanagementsystem.model.dto.DeveloperDto;
 import ua.goit.projectmanagementsystem.model.dto.DeveloperShortDto;
 import ua.goit.projectmanagementsystem.service.DeveloperService;
 import ua.goit.projectmanagementsystem.view.View;

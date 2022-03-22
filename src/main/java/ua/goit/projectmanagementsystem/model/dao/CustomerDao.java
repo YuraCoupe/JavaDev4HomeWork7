@@ -10,11 +10,6 @@ public class CustomerDao {
     public CustomerDao() {
     }
 
-    public CustomerDao(String customerName, String industry) {
-        this.customerName = customerName;
-        this.industry = industry;
-    }
-
     public Integer getCustomerId() {
         return customerId;
     }
