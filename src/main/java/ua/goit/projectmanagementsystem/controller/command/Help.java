@@ -29,6 +29,6 @@ public class Help implements Command{
         view.write("Enter " + FIND_DEVELOPERS_BY_PROJECT_ID.getName() + " to find developers by project ID.");
         view.write("Enter " + FIND_JAVA_DEVELOPERS.getName() + " to find all Java developers.");
         view.write("Enter " + FIND_MIDDLE_DEVELOPERS.getName() + " to find all middle developers.");
-        view.write("Enter " + FIND_ALL_PROJECTS.getName() + " to get all projects list.");
+        view.write("Enter " + FIND_ALL_PROJECTS.getName() + " to get all projects list with developers number.");
     }
 }
