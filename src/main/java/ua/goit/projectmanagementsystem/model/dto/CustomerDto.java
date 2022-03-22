@@ -10,11 +10,6 @@ public class CustomerDto {
     public CustomerDto() {
     }
 
-    public CustomerDto(String customerName, String industry) {
-        this.customerName = customerName;
-        this.industry = industry;
-    }
-
     public Integer getCustomerId() {
         return customerId;
     }
@@ -41,7 +36,7 @@ public class CustomerDto {
 
     @Override
     public String toString() {
-        return "CustomerDao{" +
+        return "CustomerDto{" +
                 "customerId=" + customerId +
                 ", customerName='" + customerName + '\'' +
                 ", industry='" + industry + '\'' +

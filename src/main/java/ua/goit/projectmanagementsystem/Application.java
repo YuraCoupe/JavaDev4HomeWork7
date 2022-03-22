@@ -27,12 +27,13 @@ public class Application {
 
         SkillConverter skillConverter = new SkillConverter();
         DeveloperConverter developerConverter = new DeveloperConverter(skillConverter);
+        DeveloperShortConverter developerShortConverter = new DeveloperShortConverter();
         ProjectConverter projectConverter = new ProjectConverter();
         DeveloperProjectConverter developerProjectConverter = new DeveloperProjectConverter(developerConverter, projectConverter);
         CompanyConverter companyConverter = new CompanyConverter();
 
         ProjectService projectService = new ProjectService(projectRepository, developerConverter, projectConverter, developerProjectConverter);
-        DeveloperService developerService = new DeveloperService(developerRepository, developerConverter, developerProjectConverter);
+        DeveloperService developerService = new DeveloperService(developerRepository, developerShortConverter, developerConverter, developerProjectConverter);
         CompanyService companyService = new CompanyService(companyRepository, companyConverter);
 
         View view = new Console();

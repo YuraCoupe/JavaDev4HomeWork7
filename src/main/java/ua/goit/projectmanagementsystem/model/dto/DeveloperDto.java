@@ -14,16 +14,6 @@ public class DeveloperDto {
     private Set<SkillDto> skills;
     private Set<ProjectDto> projects;
 
-    public DeveloperDto(String firstname, String lastname, Integer age, String sex, Integer companyId, Integer salary, Set<SkillDto> skills) {
-        this.firstname = firstname;
-        this.lastname = lastname;
-        this.age = age;
-        this.sex = sex;
-        this.companyId = companyId;
-        this.salary = salary;
-        this.skills = skills;
-    }
-
     public Integer getDeveloperId() {
         return developerId;
     }
@@ -101,7 +91,7 @@ public class DeveloperDto {
 
     @Override
     public String toString() {
-        return "DeveloperDao{" +
+        return "DeveloperDto{" +
                 "developerId=" + developerId +
                 ", firstname='" + firstname + '\'' +
                 ", lastname='" + lastname + '\'' +

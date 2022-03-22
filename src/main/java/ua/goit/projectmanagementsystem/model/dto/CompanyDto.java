@@ -41,7 +41,7 @@ public class CompanyDto {
 
     @Override
     public String toString() {
-        return "CompanyDao{" +
+        return "CompanyDto{" +
                 "companyId=" + companyId +
                 ", companyName='" + companyName + '\'' +
                 ", companyLocation='" + companyLocation + '\'' +

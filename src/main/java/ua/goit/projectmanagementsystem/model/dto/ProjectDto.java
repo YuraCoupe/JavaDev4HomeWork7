@@ -14,13 +14,6 @@ public class ProjectDto {
     public ProjectDto() {
     }
 
-    public ProjectDto(String projectName, Integer customerId, Integer companyId, Integer projectCost) {
-        this.projectName = projectName;
-        this.customerId = customerId;
-        this.companyId = companyId;
-        this.projectCost = projectCost;
-    }
-
     public Integer getProjectId() {
         return projectId;
     }
@@ -71,7 +64,7 @@ public class ProjectDto {
 
     @Override
     public String toString() {
-        return "ProjectDao{" +
+        return "ProjectDto{" +
                 "projectId=" + projectId +
                 ", projectName='" + projectName + '\'' +
                 ", customerId=" + customerId +

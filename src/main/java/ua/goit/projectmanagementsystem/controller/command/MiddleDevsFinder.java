@@ -1,6 +1,7 @@
 package ua.goit.projectmanagementsystem.controller.command;
 
 import ua.goit.projectmanagementsystem.model.dto.DeveloperDto;
+import ua.goit.projectmanagementsystem.model.dto.DeveloperShortDto;
 import ua.goit.projectmanagementsystem.service.DeveloperService;
 import ua.goit.projectmanagementsystem.view.View;
 
@@ -24,7 +25,7 @@ public class MiddleDevsFinder implements Command{
 
     @Override
     public void process() {
-        Set<DeveloperDto> developers = developerService.findMiddleDevelopers();
+        Set<DeveloperShortDto> developers = developerService.findMiddleDevelopers();
         view.write("Middle developers list:");
         developers.stream()
                 .forEach(developer -> view.write(developer.toString()));

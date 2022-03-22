@@ -1,6 +1,6 @@
 package ua.goit.projectmanagementsystem.controller.command;
 
-import ua.goit.projectmanagementsystem.model.dto.DeveloperDto;
+import ua.goit.projectmanagementsystem.model.dto.DeveloperShortDto;
 import ua.goit.projectmanagementsystem.service.DeveloperService;
 import ua.goit.projectmanagementsystem.view.View;
 
@@ -24,7 +24,7 @@ public class JavaDevsFinder implements Command{
 
     @Override
     public void process() {
-        Set<DeveloperDto> developers = developerService.findJavaDevelopers();
+        Set<DeveloperShortDto> developers = developerService.findJavaDevelopers();
         view.write("Java developers list:");
         developers.stream()
                 .forEach(developer -> view.write(developer.toString()));

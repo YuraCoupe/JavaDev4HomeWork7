@@ -10,11 +10,6 @@ public class SkillDto {
     public SkillDto() {
     }
 
-    public SkillDto(String specialization, String level) {
-        this.specialization = specialization;
-        this.level = level;
-    }
-
     public Integer getSkillId() {
         return skillId;
     }
@@ -41,7 +36,7 @@ public class SkillDto {
 
     @Override
     public String toString() {
-        return "SkillDao{" +
+        return "SkillDto{" +
                 "skillId=" + skillId +
                 ", specialization='" + specialization + '\'' +
                 ", level='" + level + '\'' +
