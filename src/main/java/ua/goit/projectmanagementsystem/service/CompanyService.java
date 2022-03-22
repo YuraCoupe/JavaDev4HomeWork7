@@ -39,6 +39,10 @@ public class CompanyService {
             throw new CompanyNotFoundException("This company doesn't exist");
         }
     }
+
+    public void update(CompanyDto companyDto) {
+            companyRepository.update(companyConverter.dtoToDao(companyDto));
+    }
 }
 
 

@@ -12,6 +12,7 @@ import java.util.Optional;
 
 public class CompanyRepository implements Repository<CompanyDao> {
     private static final String INSERT = "INSERT INTO companies (company_name, company_location) VALUES (?, ?);";
+    private static final String UPDATE = "UPDATE companies SET company_name = ?, company_location = ? WHERE company_id = ?;";
     private static final String FIND_BY_NAME = "SELECT * FROM companies WHERE companies.company_name = ?;";
     private static final String DELETE = "DELETE FROM companies WHERE companies.company_name = ?;";
 
@@ -39,6 +40,18 @@ public class CompanyRepository implements Repository<CompanyDao> {
              PreparedStatement preparedStatement = connection.prepareStatement(INSERT)) {
             preparedStatement.setString(1, companyDao.getCompanyName());
             preparedStatement.setString(2, companyDao.getCompanyLocation());
+            preparedStatement.execute();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    public void update(CompanyDao companyDao) {
+        try (Connection connection = databaseManager.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE)) {
+            preparedStatement.setString(1, companyDao.getCompanyName());
+            preparedStatement.setString(2, companyDao.getCompanyLocation());
+            preparedStatement.setInt(3, companyDao.getCompanyId());
             preparedStatement.execute();
         } catch (SQLException throwables) {
             throwables.printStackTrace();

@@ -21,7 +21,9 @@ public class Help implements Command{
     public void process() {
         view.write("Enter " + HELP.getName() + " to see available commands.");
         view.write("Enter " + EXIT.getName() + " to exit.");
+        view.write("Enter " + UPDATE_COMPANY.getName() + " to update company.");
         view.write("Enter " + ADD_COMPANY.getName() + " to add new company.");
+        view.write("Enter " + DELETE_COMPANY.getName() + " to delete company.");
         view.write("Enter " + GET_SALARY_SUM_BY_PROJECT_ID.getName() + " to find salary sum by project ID.");
         view.write("Enter " + FIND_DEVELOPERS_BY_PROJECT_ID.getName() + " to find developers by project ID.");
         view.write("Enter " + FIND_JAVA_DEVELOPERS.getName() + " to find all Java developers.");

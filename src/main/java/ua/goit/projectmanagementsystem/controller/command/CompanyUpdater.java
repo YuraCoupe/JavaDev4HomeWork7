@@ -26,18 +26,27 @@ public class CompanyUpdater implements Command {
         while (true) {
             view.write("Enter company name:");
             name = view.read();
-            if (!companyService.isCompanyExist(name)) {
+            if (companyService.isCompanyExist(name)) {
                 break;
             }
-            view.write("Company already exists.");
+            view.write("Company doesn't exist.");
         }
 
-        view.write("Enter company location:");
+        CompanyDto company = companyService.findByName(name);
+
+        view.write("Enter company name or press Enter to skip. Actual name is " + company.getCompanyName());
+        name = view.read();
+
+        view.write("Enter company location or press Enter to skip. Actual name is " + company.getCompanyLocation());
         String location = view.read();
 
-
-        CompanyDto company = new CompanyDto(name, location);
-        companyService.save(company);
-        view.write(String.format("Company %s added located in %s added to database", name, location));
+        if (!name.equals("")) {
+            company.setCompanyName(name);
+        }
+        if (!location.equals("")) {
+            company.setCompanyLocation(location);
+        }
+        companyService.update(company);
+        view.write("Company data updated");
     }
 }
