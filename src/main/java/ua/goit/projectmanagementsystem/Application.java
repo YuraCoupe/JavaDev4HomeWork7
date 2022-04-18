@@ -19,7 +19,7 @@ public class Application {
         PropertiesUtil util = new PropertiesUtil();
 
         DatabaseManager dbConnector = new PostgresHikariProvider(util.getHostname(), util.getPort(),
-                util.getSchema(), util.getUser(), util.getPassword());
+                util.getSchema(), util.getUser(), util.getPassword(), util.getJdbcDriver());
 
         ProjectRepository projectRepository = new ProjectRepository(dbConnector);
         DeveloperRepository developerRepository = new DeveloperRepository(dbConnector);

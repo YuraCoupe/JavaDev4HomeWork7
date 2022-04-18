@@ -6,6 +6,9 @@ import ua.goit.projectmanagementsystem.model.converter.CompanyConverter;
 import ua.goit.projectmanagementsystem.model.dto.CompanyDto;
 import ua.goit.projectmanagementsystem.repository.CompanyRepository;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class CompanyService {
     private final CompanyRepository companyRepository;
     private final CompanyConverter companyConverter;
@@ -33,7 +36,7 @@ public class CompanyService {
     }
 
     public void delete(CompanyDto companyDto) {
-        if (!companyRepository.findByName(companyDto.getCompanyName()).isEmpty()) {
+        if (!companyRepository.findById(companyDto.getCompanyId()).isEmpty()) {
             companyRepository.delete(companyConverter.dtoToDao(companyDto));
         } else {
             throw new CompanyNotFoundException("This company doesn't exist");
@@ -42,6 +45,18 @@ public class CompanyService {
 
     public void update(CompanyDto companyDto) {
             companyRepository.update(companyConverter.dtoToDao(companyDto));
+    }
+
+    public List<CompanyDto> findAll() {
+        return companyRepository.findAll()
+                .stream()
+                .map(companyDao -> companyConverter.daoToDto(companyDao))
+                .collect(Collectors.toList());
+    }
+
+    public CompanyDto finbById(Integer id) {
+        return companyConverter.daoToDto(companyRepository.findById(id).orElseThrow(()
+                -> new CompanyNotFoundException(String.format("Company %d does not exist", id))));
     }
 }
 
