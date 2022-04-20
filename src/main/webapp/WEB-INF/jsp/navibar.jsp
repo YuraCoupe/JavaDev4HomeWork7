@@ -8,7 +8,7 @@
                   <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="/companies">Companies <span class="caret"></span></a>
                     <ul class="dropdown-menu">
                       <li><a href="/companies">Find</a></li>
-                      <li><a href="/#">Create</a></li>
+                      <li><a href="/companies/new">Create</a></li>
                       <li><a href="/#">Update</a></li>
                       <li><a href="/#">Delete</a></li>
                     </ul>
@@ -21,10 +21,10 @@
                       <li><a href="/#">Delete</a></li>
                     </ul>
                   </li>
-                  <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Developers <span class="caret"></span></a>
+                  <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="/developers">Developers <span class="caret"></span></a>
                    <ul class="dropdown-menu">
-                     <li><a href="/#">Find</a></li>
-                     <li><a href="/#">Create</a></li>
+                     <li><a href="/developers">Find</a></li>
+                     <li><a href="/developers/new">Create</a></li>
                      <li><a href="/#">Update</a></li>
                      <li><a href="/#">Delete</a></li>
                    </ul>

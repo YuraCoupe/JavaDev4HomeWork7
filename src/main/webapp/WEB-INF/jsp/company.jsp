@@ -20,7 +20,7 @@
                 </div>
             </div>
             <div class="row">
-                <label for="companyName">Company ID:</label><br>
+                <label for="companyId">Company ID:</label><br>
                 <input type="text" disabled class="form-control" id="companyId" placeholder="Company ID" name="companyId" value="${company.companyId}"> <br>
                 <label for="companyName">Company name:</label><br>
                 <input type="text" class="form-control" id="companyName" placeholder="Enter Company name" name="companyName" value="${company.companyName}"><br>

@@ -5,8 +5,8 @@ import java.util.Set;
 
 public class DeveloperDto {
     private Integer developerId;
-    private String firstname;
-    private String lastname;
+    private String firstName;
+    private String lastName;
     private Integer age;
     private String sex;
     private Integer companyId;
@@ -22,20 +22,20 @@ public class DeveloperDto {
         this.developerId = developerId;
     }
 
-    public String getFirstname() {
-        return firstname;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
-    public String getLastname() {
-        return lastname;
+    public String getLastName() {
+        return lastName;
     }
 
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public Integer getAge() {
@@ -93,8 +93,8 @@ public class DeveloperDto {
     public String toString() {
         return "DeveloperDto{" +
                 "developerId=" + developerId +
-                ", firstname='" + firstname + '\'' +
-                ", lastname='" + lastname + '\'' +
+                ", firstname='" + firstName + '\'' +
+                ", lastname='" + lastName + '\'' +
                 ", age=" + age +
                 ", sex='" + sex + '\'' +
                 ", companyId=" + companyId +
@@ -109,8 +109,8 @@ public class DeveloperDto {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         DeveloperDto that = (DeveloperDto) o;
-        return developerId.equals(that.developerId) && firstname.equals(that.firstname)
-                && lastname.equals(that.lastname) && age.equals(that.age)
+        return developerId.equals(that.developerId) && firstName.equals(that.firstName)
+                && lastName.equals(that.lastName) && age.equals(that.age)
                 && sex.equals(that.sex) && companyId.equals(that.companyId)
                 && salary.equals(that.salary) && skills.equals(that.skills)
                 && projects.equals((that.projects));
@@ -118,6 +118,6 @@ public class DeveloperDto {
 
     @Override
     public int hashCode() {
-        return Objects.hash(developerId, firstname, lastname, age, sex, companyId, salary, skills, projects);
+        return Objects.hash(developerId, firstName, lastName, age, sex, companyId, salary, skills, projects);
     }
 }

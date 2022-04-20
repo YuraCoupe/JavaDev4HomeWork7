@@ -19,8 +19,8 @@ public class DeveloperConverter implements Converter<DeveloperDao, DeveloperDto>
     public DeveloperDto daoToDto(DeveloperDao developerDao) {
         DeveloperDto developerDto = new DeveloperDto();
         developerDto.setDeveloperId(developerDao.getDeveloperId());
-        developerDto.setFirstname(developerDao.getFirstname());
-        developerDto.setLastname(developerDao.getLastname());
+        developerDto.setFirstName(developerDao.getFirstname());
+        developerDto.setLastName(developerDao.getLastname());
         developerDto.setAge(developerDao.getAge());
         developerDto.setSex(developerDao.getSex());
         developerDto.setSalary(developerDao.getSalary());
@@ -36,16 +36,16 @@ public class DeveloperConverter implements Converter<DeveloperDao, DeveloperDto>
     public DeveloperDao dtoToDao(DeveloperDto developerDto) {
         DeveloperDao developerDao = new DeveloperDao();
         developerDao.setDeveloperId(developerDto.getDeveloperId());
-        developerDao.setFirstname(developerDto.getFirstname());
-        developerDao.setLastname(developerDto.getLastname());
+        developerDao.setFirstname(developerDto.getFirstName());
+        developerDao.setLastname(developerDto.getLastName());
         developerDao.setAge(developerDto.getAge());
         developerDao.setSex(developerDto.getSex());
         developerDao.setSalary(developerDto.getSalary());
         developerDao.setCompanyId(developerDto.getCompanyId());
-        Set<SkillDao> skills = developerDto.getSkills().stream()
-                .map(skillDto -> skillConverter.dtoToDao(skillDto))
-                .collect(Collectors.toSet());
-        developerDao.setSkills(skills);
+//        Set<SkillDao> skills = developerDto.getSkills().stream()
+//                .map(skillDto -> skillConverter.dtoToDao(skillDto))
+//                .collect(Collectors.toSet());
+//        developerDao.setSkills(skills);
         return developerDao;
     }
 }
