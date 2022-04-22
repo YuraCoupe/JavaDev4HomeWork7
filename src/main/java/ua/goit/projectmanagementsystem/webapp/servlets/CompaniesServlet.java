@@ -15,10 +15,6 @@ import ua.goit.projectmanagementsystem.repository.CompanyRepository;
 import ua.goit.projectmanagementsystem.service.CompanyService;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.StandardCharsets;
-import java.security.Provider;
 import java.util.*;
 
 @WebServlet(urlPatterns = "/companies/*")
@@ -38,29 +34,25 @@ public class CompaniesServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Optional<CompanyDto> modelFromStream = Optional.empty();
-        try (InputStream inputStream = req.getInputStream();
-             Scanner scanner = new Scanner(inputStream, StandardCharsets.UTF_8.name())) {
-            String jsonStr = scanner.nextLine();
-            modelFromStream = Optional.of(jsonParser.fromJson(jsonStr, CompanyDto.class));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        modelFromStream.ifPresent(companyDto -> service.save(companyDto));
-        resp.sendRedirect("/companies");
-    }
+        Integer companyId = null;
+        CompanyDto companyDto = new CompanyDto();
 
-    @Override
-    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Optional<CompanyDto> modelFromStream = Optional.empty();
-        try (InputStream inputStream = req.getInputStream();
-             Scanner scanner = new Scanner(inputStream, StandardCharsets.UTF_8.name())) {
-            String jsonStr = scanner.nextLine();
-            modelFromStream = Optional.of(jsonParser.fromJson(jsonStr, CompanyDto.class));
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (!req.getParameter("companyId").isBlank()) {
+            companyId = Integer.parseInt(req.getParameter("companyId"));
+            companyDto.setCompanyId(companyId);
         }
-        modelFromStream.ifPresent(companyDto -> service.update(companyDto));
+        String companyName = req.getParameter("companyName");
+        String companyLocation = req.getParameter("companyLocation");
+
+        companyDto.setCompanyName(companyName);
+        companyDto.setCompanyLocation(companyLocation);
+
+        if (Objects.isNull(companyId)) {
+            service.save(companyDto);
+        } else {
+            service.update(companyDto);
+        }
+
         resp.sendRedirect("/companies");
     }
 

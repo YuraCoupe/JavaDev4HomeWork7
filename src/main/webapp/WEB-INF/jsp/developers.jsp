@@ -55,7 +55,7 @@
                             <c:out value="${developer.sex}"/>
                         </td>
                         <td>
-                            Company name
+                            <c:out value="${developer.company.companyName}"/>
                         </td>
                         <td>
                             <c:out value="${developer.salary}"/>

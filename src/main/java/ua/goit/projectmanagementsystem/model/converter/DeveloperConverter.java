@@ -1,5 +1,6 @@
 package ua.goit.projectmanagementsystem.model.converter;
 
+import ua.goit.projectmanagementsystem.model.dao.CompanyDao;
 import ua.goit.projectmanagementsystem.model.dao.DeveloperDao;
 import ua.goit.projectmanagementsystem.model.dao.SkillDao;
 import ua.goit.projectmanagementsystem.model.dto.DeveloperDto;
@@ -8,15 +9,16 @@ import ua.goit.projectmanagementsystem.model.dto.SkillDto;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class DeveloperConverter implements Converter<DeveloperDao, DeveloperDto> {
+public class DeveloperConverter {
         private final SkillConverter skillConverter;
+        private final CompanyConverter companyConverter;
 
-    public DeveloperConverter(SkillConverter skillConverter) {
+    public DeveloperConverter(SkillConverter skillConverter, CompanyConverter companyConverter) {
         this.skillConverter = skillConverter;
+        this.companyConverter = companyConverter;
     }
 
-    @Override
-    public DeveloperDto daoToDto(DeveloperDao developerDao) {
+    public DeveloperDto daoToDto(DeveloperDao developerDao, CompanyDao companyDao) {
         DeveloperDto developerDto = new DeveloperDto();
         developerDto.setDeveloperId(developerDao.getDeveloperId());
         developerDto.setFirstName(developerDao.getFirstname());
@@ -24,7 +26,7 @@ public class DeveloperConverter implements Converter<DeveloperDao, DeveloperDto>
         developerDto.setAge(developerDao.getAge());
         developerDto.setSex(developerDao.getSex());
         developerDto.setSalary(developerDao.getSalary());
-        developerDto.setCompanyId(developerDao.getCompanyId());
+        developerDto.setCompany(companyConverter.daoToDto(companyDao));
         Set<SkillDto> skills = developerDao.getSkills().stream()
                 .map(skillDao -> skillConverter.daoToDto(skillDao))
                 .collect(Collectors.toSet());
@@ -32,7 +34,6 @@ public class DeveloperConverter implements Converter<DeveloperDao, DeveloperDto>
         return developerDto;
     }
 
-    @Override
     public DeveloperDao dtoToDao(DeveloperDto developerDto) {
         DeveloperDao developerDao = new DeveloperDao();
         developerDao.setDeveloperId(developerDto.getDeveloperId());
@@ -41,7 +42,7 @@ public class DeveloperConverter implements Converter<DeveloperDao, DeveloperDto>
         developerDao.setAge(developerDto.getAge());
         developerDao.setSex(developerDto.getSex());
         developerDao.setSalary(developerDto.getSalary());
-        developerDao.setCompanyId(developerDto.getCompanyId());
+        developerDao.setCompanyId(developerDto.getCompany().getCompanyId());
 //        Set<SkillDao> skills = developerDto.getSkills().stream()
 //                .map(skillDto -> skillConverter.dtoToDao(skillDto))
 //                .collect(Collectors.toSet());

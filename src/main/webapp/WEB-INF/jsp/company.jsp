@@ -19,22 +19,25 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <label for="companyId">Company ID:</label><br>
-                <input type="text" disabled class="form-control" id="companyId" placeholder="Company ID" name="companyId" value="${company.companyId}"> <br>
-                <label for="companyName">Company name:</label><br>
-                <input type="text" class="form-control" id="companyName" placeholder="Enter Company name" name="companyName" value="${company.companyName}"><br>
-                <label for="companyLocation">Company location:</label><br>
-                <input type="text" class="form-control" id="companyLocation" placeholder="Enter Company location" name="companyLocation" value="${company.companyLocation}"><br>
-            </div>
-
-            <div class="row">
-                <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
-                    <div class="btn-group me-2" role="group" aria-label="Second group">
-                        <button onclick="save()" type="button" class="btn btn-primary">Save</button>
+        <form action="/companies" method="post">
+            <div class="form-group">
+                <div class="row">
+                    <label for="companyId">Company ID:</label><br>
+                    <input type="text" readonly="readonly" class="form-control" id="companyId" placeholder="Company ID" name="companyId" value="${company.companyId}"> <br>
+                    <label for="companyName">Company name:</label><br>
+                    <input type="text" class="form-control" id="companyName" placeholder="Enter Company name" name="companyName" value="${company.companyName}"><br>
+                    <label for="companyLocation">Company location:</label><br>
+                    <input type="text" class="form-control" id="companyLocation" placeholder="Enter Company location" name="companyLocation" value="${company.companyLocation}"><br>
+                </div>
+                <div class="row">
+                    <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                        <div class="btn-group me-2" role="group" aria-label="Second group">
+                            <button type="submit" value="Submit" class="btn btn-primary">Save</button>
+                        </div>
                     </div>
                 </div>
             </div>
+        </form>
 
             <table class="table table-hover">
                 <thead>
@@ -62,34 +65,5 @@
                 </tbody>
             </table>
         </div>
-        <script>
-            let companyId = document.getElementById('companyId');
-            let companyName = document.getElementById('companyName');
-            let companyLocation = document.getElementById('companyLocation');
-            function save() {
-             let body = {
-             <% if(company.getCompanyId() != null) {%>
-                 companyId: companyId.value,
-              <% } %>
-                companyName: companyName.value,
-                companyLocation: companyLocation.value,
-              }
-              <% if(company.getCompanyId() == null) {%>
-                 let url = '/companies';
-                 let method = 'POST';
-              <% } else { %>
-                 let url = '/companies/<%= company.getCompanyId() %>';
-                 let method = 'PUT';
-              <% } %>
-                fetch(url, {
-                    method: method,
-                    body: JSON.stringify(body)
-                })
-                .then( _ => {
-                    window.location.href = '/companies';
-                }
-                );
-            }
-        </script>
     </body>
 </html>

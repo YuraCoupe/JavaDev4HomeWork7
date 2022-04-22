@@ -1,6 +1,5 @@
 package ua.goit.projectmanagementsystem.webapp.servlets;
 
-import com.google.gson.Gson;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -13,23 +12,18 @@ import ua.goit.projectmanagementsystem.model.converter.*;
 import ua.goit.projectmanagementsystem.model.dto.CompanyDto;
 import ua.goit.projectmanagementsystem.model.dto.DeveloperDto;
 import ua.goit.projectmanagementsystem.repository.CompanyRepository;
-import ua.goit.projectmanagementsystem.repository.DeveloperRepository;
+import ua.goit.projectmanagementsystem.repository.Repository;
 import ua.goit.projectmanagementsystem.service.CompanyService;
 import ua.goit.projectmanagementsystem.service.DeveloperService;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.Optional;
-import java.util.Scanner;
+import java.util.Objects;
 
 @WebServlet(urlPatterns = "/developers/*")
 public class DevelopersServlet extends HttpServlet {
     private DeveloperService developerService;
     private CompanyService companyService;
-    private static Gson jsonParser = new Gson();
-
 
     @Override
     public void init() {
@@ -38,45 +32,48 @@ public class DevelopersServlet extends HttpServlet {
         DatabaseManager dbConnector = new PostgresHikariProvider(util.getHostname(), util.getPort(),
                 util.getSchema(), util.getUser(), util.getPassword(), util.getJdbcDriver());
 
-        DeveloperRepository developerRepository = new DeveloperRepository(dbConnector);
-        DeveloperShortConverter developerShortConverter = new DeveloperShortConverter();
+        Repository repository = new Repository(dbConnector);
+        CompanyRepository companyRepository = new CompanyRepository(dbConnector);
         SkillConverter skillConverter = new SkillConverter();
-        DeveloperConverter developerConverter = new DeveloperConverter(skillConverter);
+        CompanyConverter companyConverter = new CompanyConverter();
         ProjectConverter projectConverter = new ProjectConverter();
+        DeveloperShortConverter developerShortConverter = new DeveloperShortConverter();
+        DeveloperConverter developerConverter = new DeveloperConverter(skillConverter, companyConverter);
         DeveloperProjectConverter developerProjectConverter = new DeveloperProjectConverter(developerConverter, projectConverter);
 
-        this.developerService = new DeveloperService(developerRepository, developerShortConverter, developerConverter, developerProjectConverter);
-
-        CompanyRepository companyRepository = new CompanyRepository(dbConnector);
-        CompanyConverter companyConverter = new CompanyConverter();
+        this.developerService = new DeveloperService(repository, developerShortConverter, developerConverter, developerProjectConverter);
         this.companyService = new CompanyService(companyRepository, companyConverter);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Optional<DeveloperDto> modelFromStream = Optional.empty();
-        try (InputStream inputStream = req.getInputStream();
-             Scanner scanner = new Scanner(inputStream, StandardCharsets.UTF_8.name())) {
-            String jsonStr = scanner.nextLine();
-            modelFromStream = Optional.of(jsonParser.fromJson(jsonStr, DeveloperDto.class));
-        } catch (IOException e) {
-            e.printStackTrace();
+        Integer developerId = null;
+        DeveloperDto developerDto = new DeveloperDto();
+        if (!req.getParameter("developerId").isBlank()) {
+            developerId = Integer.parseInt(req.getParameter("developerId"));
+            developerDto.setDeveloperId(developerId);
         }
-        modelFromStream.ifPresent(developerDto -> developerService.save(developerDto));
-        resp.sendRedirect("/developers");
-    }
+        String firstName = req.getParameter("firstName");
+        String lastName = req.getParameter("lastName");
+        Integer age = Integer.parseInt(req.getParameter("age"));
+        String sex = req.getParameter("sex");
+        Integer companyId = Integer.parseInt(req.getParameter("companyId"));
+        Integer salary = Integer.parseInt(req.getParameter("salary"));
 
-    @Override
-    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Optional<DeveloperDto> modelFromStream = Optional.empty();
-        try (InputStream inputStream = req.getInputStream();
-             Scanner scanner = new Scanner(inputStream, StandardCharsets.UTF_8.name())) {
-            String jsonStr = scanner.nextLine();
-            modelFromStream = Optional.of(jsonParser.fromJson(jsonStr, DeveloperDto.class));
-        } catch (IOException e) {
-            e.printStackTrace();
+        CompanyDto companyDto = companyService.finbById(companyId);
+
+        developerDto.setFirstName(firstName);
+        developerDto.setLastName(lastName);
+        developerDto.setAge(age);
+        developerDto.setSex(sex);
+        developerDto.setCompany(companyDto);
+        developerDto.setSalary(salary);
+
+        if (Objects.isNull(developerId)) {
+            developerService.save(developerDto);
+        } else {
+            developerService.update(developerDto);
         }
-        modelFromStream.ifPresent(developerDto -> developerService.update(developerDto));
         resp.sendRedirect("/developers");
     }
 
@@ -112,7 +109,8 @@ public class DevelopersServlet extends HttpServlet {
         req.getRequestDispatcher("/WEB-INF/jsp/developer.jsp").forward(req, resp);
     }
 
-    private void handleId(Integer id, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    private void handleId(Integer id, HttpServletRequest req, HttpServletResponse resp) throws
+            ServletException, IOException {
         DeveloperDto developer = developerService.findById(id);
         req.setAttribute("developer", developer);
         List<CompanyDto> companies = companyService.findAll();

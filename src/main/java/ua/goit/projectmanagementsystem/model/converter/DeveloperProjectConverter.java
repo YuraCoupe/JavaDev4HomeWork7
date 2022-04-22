@@ -17,7 +17,7 @@ public class DeveloperProjectConverter {
         this.projectConverter = projectConverter;
     }
 
-    public DeveloperDto daoToDto(DeveloperDao developerDao) {
+    /*public DeveloperDto daoToDto(DeveloperDao developerDao) {
         DeveloperDto developerDto = developerConverter.daoToDto(developerDao);
         Set<ProjectDto> projects = developerDao.getProjects().stream()
                 .map(projectDao -> projectConverter.daoToDto(projectDao))
@@ -51,5 +51,5 @@ public class DeveloperProjectConverter {
                 .collect(Collectors.toSet());
         projectDao.setDevelopers(developers);
         return projectDao;
-    }
+    }*/
 }

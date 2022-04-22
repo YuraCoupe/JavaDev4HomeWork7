@@ -24,10 +24,10 @@ public class JavaDevsFinder implements Command{
 
     @Override
     public void process() {
-        Set<DeveloperShortDto> developers = developerService.findJavaDevelopers();
+        /*Set<DeveloperShortDto> developers = developerService.findJavaDevelopers();
         view.write("Java developers list:");
         developers.stream()
                 .forEach(developer -> view.write(developer.toString()));
-        view.write("\n");
+        view.write("\n");*/
     }
 }

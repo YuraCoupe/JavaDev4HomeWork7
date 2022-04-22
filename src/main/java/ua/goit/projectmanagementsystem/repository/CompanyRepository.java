@@ -11,11 +11,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class CompanyRepository implements Repository<CompanyDao> {
+public class CompanyRepository {
     private static final String INSERT = "INSERT INTO companies (company_name, company_location) VALUES (?, ?);";
     private static final String UPDATE = "UPDATE companies SET company_name = ?, company_location = ? WHERE company_id = ?;";
     private static final String FIND_BY_NAME = "SELECT * FROM companies WHERE companies.company_name = ?;";
-    private static final String FIND_ALL = "SELECT * FROM companies ORDER BY company_name;";
+    private static final String FIND_ALL = "SELECT * FROM companies WHERE company_name <> 'Unemployed' ORDER BY company_name;";
     private static final String DELETE = "DELETE FROM companies WHERE companies.company_id = ?;";
     private static final String FIND_BY_ID = "SELECT * FROM companies WHERE companies.company_id = ?;";
 
@@ -37,7 +37,6 @@ public class CompanyRepository implements Repository<CompanyDao> {
         return Optional.empty();
     }
 
-    @Override
     public void save(CompanyDao companyDao) {
         try (Connection connection = databaseManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(INSERT)) {

@@ -16,7 +16,7 @@
                     <input type="text" class="form-control" id="companyName" placeholder="Enter Company name" name="companyName"><br>
                 </div>
                     <input type="submit" value="Search">
-            </form>
+            </form><br>
 
             <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
                 <div class="btn-group me-2" role="group" aria-label="Second group">

@@ -2,7 +2,6 @@ package ua.goit.projectmanagementsystem.repository;
 
 import ua.goit.projectmanagementsystem.config.DatabaseManager;
 import ua.goit.projectmanagementsystem.exception.DeveloperNotFoundException;
-import ua.goit.projectmanagementsystem.model.dao.CompanyDao;
 import ua.goit.projectmanagementsystem.model.dao.DeveloperDao;
 import ua.goit.projectmanagementsystem.model.dao.SkillDao;
 
@@ -12,7 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
-public class DeveloperRepository implements Repository<DeveloperDao> {
+public class DeveloperRepository {
     private static final String INSERT = "INSERT INTO developers (first_name, last_name, age, sex, company_id, salary ) VALUES (?, ?, ?, ?, ?, ?);";
     private static final String UPDATE = "UPDATE developers SET first_name = ?, last_name = ?, age = ?, sex = ?, company_id = ?, salary = ? WHERE developer_id = ?;";
     private static final String FIND_BY_NAME = "SELECT * FROM developers WHERE first_name = ? AND last_name = ?;";
@@ -99,7 +98,6 @@ public class DeveloperRepository implements Repository<DeveloperDao> {
         return developers;
     }
 
-    @Override
     public void save(DeveloperDao developerDao) {
         try (Connection connection = databaseManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(INSERT)) {

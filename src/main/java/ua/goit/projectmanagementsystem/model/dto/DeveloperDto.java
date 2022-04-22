@@ -9,7 +9,7 @@ public class DeveloperDto {
     private String lastName;
     private Integer age;
     private String sex;
-    private Integer companyId;
+    private CompanyDto company;
     private Integer salary;
     private Set<SkillDto> skills;
     private Set<ProjectDto> projects;
@@ -54,12 +54,12 @@ public class DeveloperDto {
         this.sex = sex;
     }
 
-    public Integer getCompanyId() {
-        return companyId;
+    public CompanyDto getCompany() {
+        return company;
     }
 
-    public void setCompanyId(Integer companyId) {
-        this.companyId = companyId;
+    public void setCompany(CompanyDto company) {
+        this.company = company;
     }
 
     public Integer getSalary() {
@@ -93,11 +93,11 @@ public class DeveloperDto {
     public String toString() {
         return "DeveloperDto{" +
                 "developerId=" + developerId +
-                ", firstname='" + firstName + '\'' +
-                ", lastname='" + lastName + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
                 ", age=" + age +
                 ", sex='" + sex + '\'' +
-                ", companyId=" + companyId +
+                ", company=" + company +
                 ", salary=" + salary +
                 ", skills=" + skills +
                 ", projects=" + projects +
@@ -110,14 +110,11 @@ public class DeveloperDto {
         if (o == null || getClass() != o.getClass()) return false;
         DeveloperDto that = (DeveloperDto) o;
         return developerId.equals(that.developerId) && firstName.equals(that.firstName)
-                && lastName.equals(that.lastName) && age.equals(that.age)
-                && sex.equals(that.sex) && companyId.equals(that.companyId)
-                && salary.equals(that.salary) && skills.equals(that.skills)
-                && projects.equals((that.projects));
+                && lastName.equals(that.lastName) && age.equals(that.age);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(developerId, firstName, lastName, age, sex, companyId, salary, skills, projects);
+        return Objects.hash(developerId, firstName, lastName, age);
     }
 }

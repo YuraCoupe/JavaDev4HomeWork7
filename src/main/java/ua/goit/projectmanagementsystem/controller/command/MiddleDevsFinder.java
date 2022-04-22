@@ -24,10 +24,10 @@ public class MiddleDevsFinder implements Command{
 
     @Override
     public void process() {
-        Set<DeveloperShortDto> developers = developerService.findMiddleDevelopers();
+        /*Set<DeveloperShortDto> developers = developerService.findMiddleDevelopers();
         view.write("Middle developers list:");
         developers.stream()
                 .forEach(developer -> view.write(developer.toString()));
-        view.write("\n");
+        view.write("\n");*/
     }
 }
