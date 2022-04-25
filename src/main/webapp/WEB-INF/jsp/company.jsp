@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 <!DOCTYPE html>
@@ -39,31 +40,33 @@
             </div>
         </form>
 
+        <c:if test = "${fn:length(developers) > 0}">
             <table class="table table-hover">
                 <thead>
                     <tr>
-                        <td>Company name</td>
-                        <td>Company location</td>
-                        <td>Company employees</td>
+                        <td>Developer first name</td>
+                        <td>Developer last name</td>
+                        <td>Developer salary</td>
                     </tr>
                 </thead>
                 <tbody>
-                <c:forEach items="${companies}" var="company">
+                <c:forEach items="${developers}" var="developer">
                     <tr>
                         <td>
-                            <c:out value="${company.companyName}"/>
+                            <c:out value="${developer.firstName}"/>
                         </td>
                         <td>
-                            <c:out value="${company.companyLocation}"/>
+                            <c:out value="${developer.lastName}"/>
                         </td>
                         <td>
-                            Developers List
-
+                            <c:out value="${developer.salary}"/>
                         </td>
                     </tr>
                     </c:forEach>
                 </tbody>
             </table>
+        </c:if>
+
         </div>
     </body>
 </html>

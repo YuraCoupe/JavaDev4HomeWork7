@@ -12,7 +12,7 @@ import ua.goit.projectmanagementsystem.model.converter.*;
 import ua.goit.projectmanagementsystem.model.dto.CompanyDto;
 import ua.goit.projectmanagementsystem.model.dto.DeveloperDto;
 import ua.goit.projectmanagementsystem.repository.CompanyRepository;
-import ua.goit.projectmanagementsystem.repository.Repository;
+import ua.goit.projectmanagementsystem.repository.DeveloperRepository;
 import ua.goit.projectmanagementsystem.service.CompanyService;
 import ua.goit.projectmanagementsystem.service.DeveloperService;
 
@@ -32,7 +32,7 @@ public class DevelopersServlet extends HttpServlet {
         DatabaseManager dbConnector = new PostgresHikariProvider(util.getHostname(), util.getPort(),
                 util.getSchema(), util.getUser(), util.getPassword(), util.getJdbcDriver());
 
-        Repository repository = new Repository(dbConnector);
+        DeveloperRepository developerRepository = new DeveloperRepository(dbConnector);
         CompanyRepository companyRepository = new CompanyRepository(dbConnector);
         SkillConverter skillConverter = new SkillConverter();
         CompanyConverter companyConverter = new CompanyConverter();
@@ -41,7 +41,7 @@ public class DevelopersServlet extends HttpServlet {
         DeveloperConverter developerConverter = new DeveloperConverter(skillConverter, companyConverter);
         DeveloperProjectConverter developerProjectConverter = new DeveloperProjectConverter(developerConverter, projectConverter);
 
-        this.developerService = new DeveloperService(repository, developerShortConverter, developerConverter, developerProjectConverter);
+        this.developerService = new DeveloperService(developerRepository, companyRepository, developerShortConverter, developerConverter, developerProjectConverter);
         this.companyService = new CompanyService(companyRepository, companyConverter);
     }
 

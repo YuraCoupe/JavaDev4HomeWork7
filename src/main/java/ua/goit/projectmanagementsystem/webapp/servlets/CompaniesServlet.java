@@ -9,17 +9,21 @@ import jakarta.servlet.http.HttpServletResponse;
 import ua.goit.projectmanagementsystem.config.DatabaseManager;
 import ua.goit.projectmanagementsystem.config.PostgresHikariProvider;
 import ua.goit.projectmanagementsystem.config.PropertiesUtil;
-import ua.goit.projectmanagementsystem.model.converter.CompanyConverter;
+import ua.goit.projectmanagementsystem.model.converter.*;
 import ua.goit.projectmanagementsystem.model.dto.CompanyDto;
+import ua.goit.projectmanagementsystem.model.dto.DeveloperDto;
 import ua.goit.projectmanagementsystem.repository.CompanyRepository;
+import ua.goit.projectmanagementsystem.repository.DeveloperRepository;
 import ua.goit.projectmanagementsystem.service.CompanyService;
+import ua.goit.projectmanagementsystem.service.DeveloperService;
 
 import java.io.IOException;
 import java.util.*;
 
 @WebServlet(urlPatterns = "/companies/*")
 public class CompaniesServlet extends HttpServlet {
-    private CompanyService service;
+    private CompanyService companyService;
+    private DeveloperService developerService;
     private static Gson jsonParser = new Gson();
 
 
@@ -29,7 +33,8 @@ public class CompaniesServlet extends HttpServlet {
 
         DatabaseManager dbConnector = new PostgresHikariProvider(util.getHostname(), util.getPort(),
                 util.getSchema(), util.getUser(), util.getPassword(), util.getJdbcDriver());
-        this.service = new CompanyService(new CompanyRepository(dbConnector), new CompanyConverter());
+        this.companyService = new CompanyService(new CompanyRepository(dbConnector), new CompanyConverter());
+        this.developerService = new DeveloperService(new DeveloperRepository(dbConnector), new CompanyRepository(dbConnector), new DeveloperShortConverter(), new DeveloperConverter(new SkillConverter(), new CompanyConverter()), new DeveloperProjectConverter(new DeveloperConverter(new SkillConverter(), new CompanyConverter()), new ProjectConverter()));
     }
 
     @Override
@@ -48,9 +53,9 @@ public class CompaniesServlet extends HttpServlet {
         companyDto.setCompanyLocation(companyLocation);
 
         if (Objects.isNull(companyId)) {
-            service.save(companyDto);
+            companyService.save(companyDto);
         } else {
-            service.update(companyDto);
+            companyService.update(companyDto);
         }
 
         resp.sendRedirect("/companies");
@@ -62,8 +67,8 @@ public class CompaniesServlet extends HttpServlet {
         String idStr = requestURI.replaceAll("/companies/?", "");
         String deleteId = req.getParameter("deleteId");
         if (deleteId != null) {
-            CompanyDto companyDto = service.finbById(Integer.parseInt(deleteId));
-            service.delete(companyDto);
+            CompanyDto companyDto = companyService.finbById(Integer.parseInt(deleteId));
+            companyService.delete(companyDto);
             resp.sendRedirect("/companies");
         }
         else if ("new".equalsIgnoreCase(idStr)) {
@@ -76,7 +81,7 @@ public class CompaniesServlet extends HttpServlet {
                 resp.sendRedirect("/companies");
             }
         } else {
-            List<CompanyDto> companies = service.findAll();
+            List<CompanyDto> companies = companyService.findAll();
             req.setAttribute("companies", companies);
             req.getRequestDispatcher("/WEB-INF/jsp/companies.jsp").forward(req, resp);
         }
@@ -90,8 +95,10 @@ public class CompaniesServlet extends HttpServlet {
     }
 
     private void handleId(Integer id, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        CompanyDto company = service.finbById(id);
+        CompanyDto company = companyService.finbById(id);
         req.setAttribute("company", company);
+        List<DeveloperDto> developers = developerService.findByCompanyId(company.getCompanyId());
+        req.setAttribute("developers", developers);
         req.setCharacterEncoding("UTF-8");
         req.getRequestDispatcher("/WEB-INF/jsp/company.jsp").forward(req, resp);
 

@@ -18,6 +18,7 @@ public class DeveloperRepository {
     private static final String FIND_ALL = "SELECT * FROM developers ORDER BY first_name;";
     private static final String DELETE = "DELETE FROM developers WHERE developer_id = ?;";
     private static final String FIND_BY_ID = "SELECT * FROM developers WHERE developer_id = ?;";
+    private static final String FIND_BY_COMPANY_ID = "SELECT * FROM developers WHERE company_id = ?;";
 
     private final static String FIND_JAVA_DEVELOPERS =
             "SELECT d.developer_id, d.first_name, d.last_name, d.age, d.sex, d.company_id, d.salary\n" +
@@ -200,6 +201,18 @@ public class DeveloperRepository {
             throwables.printStackTrace();
         }
         return Optional.empty();
+    }
+
+    public List<DeveloperDao> findByCompanyId(Integer companyId) {
+        try (Connection connection = databaseManager.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(FIND_BY_COMPANY_ID)) {
+            preparedStatement.setLong(1, companyId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            return mapToDeveloperDaos(resultSet);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return new ArrayList<>();
     }
 }
 
