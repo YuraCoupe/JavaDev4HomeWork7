@@ -23,13 +23,13 @@
                 <div class="form-group">
                     <div class="row">
                         <label for="developerId">Developer ID:</label><br>
-                        <input type="text" readonly="readonly" class="form-control" id="developerId" placeholder="Developer ID" name="developerId" value="${developer.developerId}"> <br>
+                        <input type="number" readonly="readonly" class="form-control" id="developerId" placeholder="Developer ID" name="developerId" value="${developer.developerId}"> <br>
                          <label for="firstName">First name:</label><br>
                         <input type="text" class="form-control" id="firstName" placeholder="Enter first name" name="firstName" value="${developer.firstName}"><br>
                         <label for="lastName">Last name:</label><br>
                         <input type="text" class="form-control" id="lastName" placeholder="Enter last name" name="lastName" value="${developer.lastName}"><br>
                         <label for="age">Age:</label><br>
-                        <input type="text" class="form-control" id="age" placeholder="Enter age" name="age" value="${developer.age}"><br>
+                        <input type="number" class="form-control" id="age" placeholder="Enter age" name="age" value="${developer.age}"><br>
                         <label for="sex">Sex:</label><br>
                         <select class="form-control" id="sex" name="sex">
                             <option value="male" <c:if test="${developer.sex == 'male'}"> selected </c:if>>male</option>
@@ -44,7 +44,7 @@
                             </c:forEach>
                         </select><br>
                         <label for="salary">Salary, USD:</label><br>
-                        <input type="text" class="form-control" id="salary" placeholder="Enter salary" name="salary" value="${developer.salary}"><br>
+                        <input type="number" class="form-control" id="salary" placeholder="Enter salary" name="salary" value="${developer.salary}"><br>
                     </div>
                     <div class="row">
                         <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">

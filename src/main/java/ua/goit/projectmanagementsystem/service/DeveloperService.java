@@ -89,4 +89,14 @@ public class DeveloperService {
                 })
                 .collect(Collectors.toList());
     }
+
+    public List<DeveloperDto> findAllUnemployed() {
+        return developerRepository.findAllUnemployed()
+                .stream()
+                .map(developerDao -> {CompanyDao companyDao = companyRepository.findById(developerDao.getCompanyId()).orElseThrow(()
+                        -> new CompanyNotFoundException(String.format("Company does not exist")));
+                    return developerConverter.daoToDto(developerDao, companyDao);
+                })
+                .collect(Collectors.toList());
+    }
 }

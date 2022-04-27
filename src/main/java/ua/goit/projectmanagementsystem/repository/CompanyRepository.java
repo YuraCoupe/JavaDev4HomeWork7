@@ -3,10 +3,7 @@ package ua.goit.projectmanagementsystem.repository;
 import ua.goit.projectmanagementsystem.config.DatabaseManager;
 import ua.goit.projectmanagementsystem.model.dao.CompanyDao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -15,7 +12,8 @@ public class CompanyRepository {
     private static final String INSERT = "INSERT INTO companies (company_name, company_location) VALUES (?, ?);";
     private static final String UPDATE = "UPDATE companies SET company_name = ?, company_location = ? WHERE company_id = ?;";
     private static final String FIND_BY_NAME = "SELECT * FROM companies WHERE companies.company_name = ?;";
-    private static final String FIND_ALL = "SELECT * FROM companies WHERE company_name <> 'Unemployed' ORDER BY company_name;";
+    private static final String FIND_ALL = "SELECT * FROM companies ORDER BY company_name;";
+    private static final String FIND_ALL_EX_UNEMPLOYED = "SELECT * FROM companies WHERE company_name <> 'Unemployed' ORDER BY company_name;";
     private static final String DELETE = "DELETE FROM companies WHERE companies.company_id = ?;";
     private static final String FIND_BY_ID = "SELECT * FROM companies WHERE companies.company_id = ?;";
 
@@ -37,15 +35,20 @@ public class CompanyRepository {
         return Optional.empty();
     }
 
-    public void save(CompanyDao companyDao) {
+    public Integer save(CompanyDao companyDao) {
         try (Connection connection = databaseManager.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(INSERT)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, companyDao.getCompanyName());
             preparedStatement.setString(2, companyDao.getCompanyLocation());
             preparedStatement.execute();
+            ResultSet resultSet = preparedStatement.getGeneratedKeys();
+            resultSet.next();
+            Integer id = resultSet.getInt(1);
+            return id;
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
+        return null;
     }
 
     public void update(CompanyDao companyDao) {
@@ -114,5 +117,16 @@ public class CompanyRepository {
             throwables.printStackTrace();
         }
         return Optional.empty();
+    }
+
+    public List<CompanyDao> findAllExUnemployed() {
+        try (Connection connection = databaseManager.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(FIND_ALL_EX_UNEMPLOYED)) {
+            ResultSet resultSet = preparedStatement.executeQuery();
+            return mapToCompanyDaos(resultSet);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return new ArrayList<>();
     }
 }

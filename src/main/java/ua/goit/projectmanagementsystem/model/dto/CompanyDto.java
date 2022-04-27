@@ -1,11 +1,13 @@
 package ua.goit.projectmanagementsystem.model.dto;
 
+import java.util.List;
 import java.util.Objects;
 
 public class CompanyDto {
     private Integer companyId;
     private String companyName;
     private String companyLocation;
+    private List<DeveloperDto> developers;
 
     public CompanyDto() {
     }
@@ -37,6 +39,14 @@ public class CompanyDto {
 
     public void setCompanyLocation(String companyLocation) {
         this.companyLocation = companyLocation;
+    }
+
+    public List<DeveloperDto> getDevelopers() {
+        return developers;
+    }
+
+    public void setDevelopers(List<DeveloperDto> developers) {
+        this.developers = developers;
     }
 
     @Override

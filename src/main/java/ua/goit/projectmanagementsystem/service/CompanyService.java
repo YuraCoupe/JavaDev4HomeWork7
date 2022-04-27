@@ -27,12 +27,14 @@ public class CompanyService {
         return companyRepository.findByName(name).isPresent();
     }
 
-    public void save(CompanyDto companyDto) {
+    public Integer save(CompanyDto companyDto) {
+        Integer id = null;
         if (companyRepository.findByName(companyDto.getCompanyName()).isEmpty()) {
-            companyRepository.save(companyConverter.dtoToDao(companyDto));
+            id = companyRepository.save(companyConverter.dtoToDao(companyDto));
         } else {
             throw new CompanyAlreadyExistException("This company already exists");
         }
+        return id;
     }
 
     public void delete(CompanyDto companyDto) {
@@ -49,6 +51,13 @@ public class CompanyService {
 
     public List<CompanyDto> findAll() {
         return companyRepository.findAll()
+                .stream()
+                .map(companyDao -> companyConverter.daoToDto(companyDao))
+                .collect(Collectors.toList());
+    }
+
+    public List<CompanyDto> findAllExUnemployed() {
+        return companyRepository.findAllExUnemployed()
                 .stream()
                 .map(companyDao -> companyConverter.daoToDto(companyDao))
                 .collect(Collectors.toList());

@@ -10,15 +10,6 @@
     <body>
         <c:import url="${contextPath}/WEB-INF/jsp/navibar.jsp"/>
         <div class="container">
-            <form action="/findDeveloper">
-                <div class="form-group">
-                    <label for="FirstName">Developer First name:</label><br>
-                    <input type="text" class="form-control" id="firstName" placeholder="Enter first name" name="firstName"><br>
-                    <label for="LastName">Developer Last name:</label><br>
-                    <input type="text" class="form-control" id="lastName" placeholder="Enter last name" name="lastName"><br>
-                </div>
-                    <input type="submit" value="Search">
-            </form>
 
             <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
                 <div class="btn-group me-2" role="group" aria-label="Second group">

@@ -19,6 +19,10 @@ public class DeveloperRepository {
     private static final String DELETE = "DELETE FROM developers WHERE developer_id = ?;";
     private static final String FIND_BY_ID = "SELECT * FROM developers WHERE developer_id = ?;";
     private static final String FIND_BY_COMPANY_ID = "SELECT * FROM developers WHERE company_id = ?;";
+    private static final String FIND_ALL_UNEMPLOYED =
+            "SELECT * FROM developers d\n" +
+            "JOIN companies c ON d.company_id = c.company_id\n" +
+            "WHERE c.company_name = 'Unemployed';";
 
     private final static String FIND_JAVA_DEVELOPERS =
             "SELECT d.developer_id, d.first_name, d.last_name, d.age, d.sex, d.company_id, d.salary\n" +
@@ -207,6 +211,17 @@ public class DeveloperRepository {
         try (Connection connection = databaseManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(FIND_BY_COMPANY_ID)) {
             preparedStatement.setLong(1, companyId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            return mapToDeveloperDaos(resultSet);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return new ArrayList<>();
+    }
+
+    public List<DeveloperDao> findAllUnemployed() {
+        try (Connection connection = databaseManager.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(FIND_ALL_UNEMPLOYED)) {
             ResultSet resultSet = preparedStatement.executeQuery();
             return mapToDeveloperDaos(resultSet);
         } catch (SQLException throwables) {

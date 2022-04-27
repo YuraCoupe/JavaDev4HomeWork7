@@ -53,11 +53,20 @@ public class CompaniesServlet extends HttpServlet {
         companyDto.setCompanyLocation(companyLocation);
 
         if (Objects.isNull(companyId)) {
-            companyService.save(companyDto);
+            companyId = companyService.save(companyDto);
         } else {
             companyService.update(companyDto);
         }
 
+        Integer developerId;
+        DeveloperDto developerDto;
+        if (Objects.nonNull(req.getParameter("developerId"))) {
+            developerId = Integer.parseInt(req.getParameter("developerId"));
+            developerDto = developerService.findById(developerId);
+            companyDto = companyService.finbById(companyId);
+            developerDto.setCompany(companyDto);
+            developerService.update(developerDto);
+        }
         resp.sendRedirect("/companies");
     }
 
@@ -70,18 +79,24 @@ public class CompaniesServlet extends HttpServlet {
             CompanyDto companyDto = companyService.finbById(Integer.parseInt(deleteId));
             companyService.delete(companyDto);
             resp.sendRedirect("/companies");
-        }
-        else if ("new".equalsIgnoreCase(idStr)) {
+        } else if ("new".equalsIgnoreCase(idStr)) {
             handleNew(req, resp);
         } else if (!idStr.equals("")) {
             try {
                 Integer id = Integer.parseInt(idStr);
+                String removeId = req.getParameter("removeId");
+                if (removeId != null) {
+                    DeveloperDto developerDto = developerService.findById(Integer.parseInt(removeId));
+                    CompanyDto companyDto = companyService.findByName("Unemployed");
+                    developerDto.setCompany(companyDto);
+                    developerService.update(developerDto);
+                }
                 handleId(id, req, resp);
             } catch (RuntimeException e) {
                 resp.sendRedirect("/companies");
             }
         } else {
-            List<CompanyDto> companies = companyService.findAll();
+            List<CompanyDto> companies = companyService.findAllExUnemployed();
             req.setAttribute("companies", companies);
             req.getRequestDispatcher("/WEB-INF/jsp/companies.jsp").forward(req, resp);
         }
@@ -91,6 +106,8 @@ public class CompaniesServlet extends HttpServlet {
         req.setAttribute("company", new CompanyDto());
         //List<CompanyDto> all = service.findAll();
         //req.setAttribute("companies", all);
+        List<DeveloperDto> unemployedDevelopers = developerService.findAllUnemployed();
+        req.setAttribute("unemployedDevelopers", unemployedDevelopers);
         req.getRequestDispatcher("/WEB-INF/jsp/company.jsp").forward(req, resp);
     }
 
@@ -99,6 +116,8 @@ public class CompaniesServlet extends HttpServlet {
         req.setAttribute("company", company);
         List<DeveloperDto> developers = developerService.findByCompanyId(company.getCompanyId());
         req.setAttribute("developers", developers);
+        List<DeveloperDto> unemployedDevelopers = developerService.findAllUnemployed();
+        req.setAttribute("unemployedDevelopers", unemployedDevelopers);
         req.setCharacterEncoding("UTF-8");
         req.getRequestDispatcher("/WEB-INF/jsp/company.jsp").forward(req, resp);
 

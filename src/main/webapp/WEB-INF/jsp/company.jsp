@@ -19,16 +19,26 @@
                         <a href="/companies" type="button" class="btn btn-success">Back to companies</a>
                     </div>
                 </div>
-            </div>
+            </div><br>
         <form action="/companies" method="post">
             <div class="form-group">
                 <div class="row">
                     <label for="companyId">Company ID:</label><br>
-                    <input type="text" readonly="readonly" class="form-control" id="companyId" placeholder="Company ID" name="companyId" value="${company.companyId}"> <br>
+                    <input type="number" readonly="readonly" class="form-control" id="companyId" placeholder="Company ID" name="companyId" value="${company.companyId}"> <br>
                     <label for="companyName">Company name:</label><br>
                     <input type="text" class="form-control" id="companyName" placeholder="Enter Company name" name="companyName" value="${company.companyName}"><br>
                     <label for="companyLocation">Company location:</label><br>
                     <input type="text" class="form-control" id="companyLocation" placeholder="Enter Company location" name="companyLocation" value="${company.companyLocation}"><br>
+                    <label for="developer">Add developer:</label><br>
+                    <select class="form-control" id="developerId" name="developerId">
+                        <option disabled selected value> -- select an option -- </option>
+                        <c:forEach items="${unemployedDevelopers}" var="unemployedDeveloper">
+                             <option value="${unemployedDeveloper.developerId}">
+                                 <c:out value="${unemployedDeveloper.firstName}"/>
+                                 <c:out value="${unemployedDeveloper.lastName}"/>
+                             </option>
+                        </c:forEach>
+                    </select><br>
                 </div>
                 <div class="row">
                     <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
@@ -60,6 +70,14 @@
                         </td>
                         <td>
                             <c:out value="${developer.salary}"/>
+                        </td>
+                        <td>
+                            <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                                <div class="btn-group me-2" role="group" aria-label="Second group">
+                                    <a href="/developers/${developer.developerId}" type="button" class="btn btn-warning">Edit</a>
+                                    <a href="/companies/${company.companyId}?removeId=${developer.developerId}" type="button" class="btn btn-danger">Remove</a>
+                                </div>
+                            </div>
                         </td>
                     </tr>
                     </c:forEach>
