@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import ua.goit.projectmanagementsystem.config.DatabaseManager;
 import ua.goit.projectmanagementsystem.config.PostgresHikariProvider;
 import ua.goit.projectmanagementsystem.config.PropertiesUtil;
+import ua.goit.projectmanagementsystem.model.ErrorMessage;
 import ua.goit.projectmanagementsystem.model.converter.*;
 import ua.goit.projectmanagementsystem.model.dto.CompanyDto;
 import ua.goit.projectmanagementsystem.model.dto.DeveloperDto;
@@ -15,6 +16,7 @@ import ua.goit.projectmanagementsystem.repository.CompanyRepository;
 import ua.goit.projectmanagementsystem.repository.DeveloperRepository;
 import ua.goit.projectmanagementsystem.service.CompanyService;
 import ua.goit.projectmanagementsystem.service.DeveloperService;
+import ua.goit.projectmanagementsystem.service.Validator;
 
 import java.io.IOException;
 import java.util.List;
@@ -24,6 +26,7 @@ import java.util.Objects;
 public class DevelopersServlet extends HttpServlet {
     private DeveloperService developerService;
     private CompanyService companyService;
+    private Validator validator;
 
     @Override
     public void init() {
@@ -43,6 +46,7 @@ public class DevelopersServlet extends HttpServlet {
 
         this.developerService = new DeveloperService(developerRepository, companyRepository, developerShortConverter, developerConverter, developerProjectConverter);
         this.companyService = new CompanyService(companyRepository, companyConverter);
+        this.validator = new Validator();
     }
 
     @Override
@@ -53,6 +57,18 @@ public class DevelopersServlet extends HttpServlet {
             developerId = Integer.parseInt(req.getParameter("developerId"));
             developerDto.setDeveloperId(developerId);
         }
+
+        ErrorMessage errorMessage = validator.validateDeveloper(req);
+        if (!errorMessage.getErrors().isEmpty()) {
+            req.setAttribute("errorMessage", errorMessage);
+            if (Objects.nonNull(developerId)) {
+                handleId(developerId, req, resp);
+            } else {
+                handleNew(req, resp);
+            }
+            return;
+        }
+
         String firstName = req.getParameter("firstName");
         String lastName = req.getParameter("lastName");
         Integer age = Integer.parseInt(req.getParameter("age"));

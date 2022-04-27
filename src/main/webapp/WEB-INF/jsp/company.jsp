@@ -48,6 +48,11 @@
                     </div>
                 </div>
             </div>
+            <c:if test="${not empty errorMessage}">
+                <c:forEach items="${errorMessage.errors}" var="error">
+                    <p style="color:red">${error}</p>
+                </c:forEach>
+            </c:if>
         </form>
 
         <c:if test = "${fn:length(developers) > 0}">

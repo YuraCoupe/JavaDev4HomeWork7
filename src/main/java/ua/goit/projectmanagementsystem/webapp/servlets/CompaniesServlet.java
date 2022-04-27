@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import ua.goit.projectmanagementsystem.config.DatabaseManager;
 import ua.goit.projectmanagementsystem.config.PostgresHikariProvider;
 import ua.goit.projectmanagementsystem.config.PropertiesUtil;
+import ua.goit.projectmanagementsystem.model.ErrorMessage;
 import ua.goit.projectmanagementsystem.model.converter.*;
 import ua.goit.projectmanagementsystem.model.dto.CompanyDto;
 import ua.goit.projectmanagementsystem.model.dto.DeveloperDto;
@@ -16,6 +17,7 @@ import ua.goit.projectmanagementsystem.repository.CompanyRepository;
 import ua.goit.projectmanagementsystem.repository.DeveloperRepository;
 import ua.goit.projectmanagementsystem.service.CompanyService;
 import ua.goit.projectmanagementsystem.service.DeveloperService;
+import ua.goit.projectmanagementsystem.service.Validator;
 
 import java.io.IOException;
 import java.util.*;
@@ -25,6 +27,7 @@ public class CompaniesServlet extends HttpServlet {
     private CompanyService companyService;
     private DeveloperService developerService;
     private static Gson jsonParser = new Gson();
+    private Validator validator;
 
 
     @Override
@@ -35,10 +38,12 @@ public class CompaniesServlet extends HttpServlet {
                 util.getSchema(), util.getUser(), util.getPassword(), util.getJdbcDriver());
         this.companyService = new CompanyService(new CompanyRepository(dbConnector), new CompanyConverter());
         this.developerService = new DeveloperService(new DeveloperRepository(dbConnector), new CompanyRepository(dbConnector), new DeveloperShortConverter(), new DeveloperConverter(new SkillConverter(), new CompanyConverter()), new DeveloperProjectConverter(new DeveloperConverter(new SkillConverter(), new CompanyConverter()), new ProjectConverter()));
+        validator = new Validator();
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
         Integer companyId = null;
         CompanyDto companyDto = new CompanyDto();
 
@@ -46,6 +51,18 @@ public class CompaniesServlet extends HttpServlet {
             companyId = Integer.parseInt(req.getParameter("companyId"));
             companyDto.setCompanyId(companyId);
         }
+
+        ErrorMessage errorMessage = validator.validateCompany(req);
+        if (!errorMessage.getErrors().isEmpty()) {
+            req.setAttribute("errorMessage", errorMessage);
+            if (Objects.nonNull(companyId)) {
+                handleId(companyId, req, resp);
+            } else {
+                handleNew(req, resp);
+            }
+            return;
+        }
+
         String companyName = req.getParameter("companyName");
         String companyLocation = req.getParameter("companyLocation");
 
