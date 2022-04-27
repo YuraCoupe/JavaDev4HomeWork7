@@ -26,8 +26,6 @@
                         <td>Sex</td>
                         <td>Company</td>
                         <td>Salary</td>
-                        <td>Skills</td>
-                        <td>Projects</td>
                     </tr>
                 </thead>
                 <tbody>
@@ -50,12 +48,6 @@
                         </td>
                         <td>
                             <c:out value="${developer.salary}"/>
-                        </td>
-                        <td>
-                            Skills List
-                        </td>
-                        <td>
-                            Projects List
                         </td>
                         <td>
                             <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
