@@ -10,13 +10,15 @@ import ua.goit.projectmanagementsystem.config.PostgresHikariProvider;
 import ua.goit.projectmanagementsystem.config.PropertiesUtil;
 import ua.goit.projectmanagementsystem.model.ErrorMessage;
 import ua.goit.projectmanagementsystem.model.converter.*;
+import ua.goit.projectmanagementsystem.model.domain.DeveloperProject;
+import ua.goit.projectmanagementsystem.model.domain.Project;
 import ua.goit.projectmanagementsystem.model.dto.CompanyDto;
 import ua.goit.projectmanagementsystem.model.dto.DeveloperDto;
 import ua.goit.projectmanagementsystem.repository.CompanyRepository;
+import ua.goit.projectmanagementsystem.repository.DeveloperProjectDAO;
 import ua.goit.projectmanagementsystem.repository.DeveloperRepository;
-import ua.goit.projectmanagementsystem.service.CompanyService;
-import ua.goit.projectmanagementsystem.service.DeveloperService;
-import ua.goit.projectmanagementsystem.service.Validator;
+import ua.goit.projectmanagementsystem.repository.ProjectRepository;
+import ua.goit.projectmanagementsystem.service.*;
 
 import java.io.IOException;
 import java.util.List;
@@ -26,6 +28,8 @@ import java.util.Objects;
 public class DevelopersServlet extends HttpServlet {
     private DeveloperService developerService;
     private CompanyService companyService;
+    private ProjectService projectService;
+    private DeveloperProjectService developerProjectService;
     private Validator validator;
 
     @Override
@@ -46,6 +50,9 @@ public class DevelopersServlet extends HttpServlet {
 
         this.developerService = new DeveloperService(developerRepository, companyRepository, developerShortConverter, developerConverter, developerProjectConverter);
         this.companyService = new CompanyService(companyRepository, companyConverter);
+        this.projectService = new ProjectService(new ProjectRepository(dbConnector), companyRepository, companyConverter);
+        this.developerProjectService = new DeveloperProjectService(new DeveloperProjectDAO(dbConnector));
+
         this.validator = new Validator();
     }
 
@@ -107,6 +114,11 @@ public class DevelopersServlet extends HttpServlet {
         } else if (!idStr.equals("")) {
             try {
                 Integer id = Integer.parseInt(idStr);
+                String removeId = req.getParameter("removeId");
+                if (removeId != null) {
+                    DeveloperProject developerProject = developerProjectService.findByIds(id, Integer.parseInt(removeId));
+                    developerProjectService.delete(developerProject);
+                }
                 handleId(id, req, resp);
             } catch (RuntimeException e) {
                 resp.sendRedirect("/developers");
@@ -122,6 +134,8 @@ public class DevelopersServlet extends HttpServlet {
         req.setAttribute("developer", new DeveloperDto());
         List<CompanyDto> companies = companyService.findAll();
         req.setAttribute("companies", companies);
+        List<Project> projectsWithoutThisDeveloper = projectService.findAll();
+        req.setAttribute("projectsWithoutThisDeveloper", projectsWithoutThisDeveloper);
         req.getRequestDispatcher("/WEB-INF/jsp/developer.jsp").forward(req, resp);
     }
 
@@ -131,6 +145,10 @@ public class DevelopersServlet extends HttpServlet {
         req.setAttribute("developer", developer);
         List<CompanyDto> companies = companyService.findAll();
         req.setAttribute("companies", companies);
+        List<Project> projects = projectService.findByDeveloperId(developer.getDeveloperId());
+        req.setAttribute("projects", projects);
+        List<Project> projectsWithoutThisDeveloper = projectService.findWithoutThisDeveloperId(id);
+        req.setAttribute("projectsWithoutThisDeveloper", projectsWithoutThisDeveloper);
         req.setCharacterEncoding("UTF-8");
         req.getRequestDispatcher("/WEB-INF/jsp/developer.jsp").forward(req, resp);
 

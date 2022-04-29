@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 <!DOCTYPE html>
@@ -60,6 +61,36 @@
                     </c:forEach>
                 </c:if>
             </form>
+            <c:if test = "${fn:length(projects) > 0}">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <td>Project name</td>
+                            <td>Project Cost</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <c:forEach items="${projects}" var="project">
+                            <tr>
+                                <td>
+                                    <c:out value="${project.projectName}"/>
+                                </td>
+                                <td>
+                                    <c:out value="${project.projectCost}"/>
+                                </td>
+                                <td>
+                                    <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                                        <div class="btn-group me-2" role="group" aria-label="Second group">
+                                            <a href="/projects/${project.projectId}" type="button" class="btn btn-warning">Edit</a>
+                                            <a href="/developers/${developer.developerId}?removeId=${project.projectId}" type="button" class="btn btn-danger">Remove</a>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </c:forEach>
+                    </tbody>
+                </table>
+                </c:if>
         </div>
     </body>
 </html>

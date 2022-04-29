@@ -19,10 +19,19 @@ public class DeveloperRepository {
     private static final String DELETE = "DELETE FROM developers WHERE developer_id = ?;";
     private static final String FIND_BY_ID = "SELECT * FROM developers WHERE developer_id = ?;";
     private static final String FIND_BY_COMPANY_ID = "SELECT * FROM developers WHERE company_id = ?;";
+    private static final String FIND_BY_PROJECT_ID =
+            "SELECT d.developer_id, d.first_name, d.last_name, d.age, d.sex, d.company_id, d.salary FROM developers d \n" +
+                    "JOIN developerstoprojects dtp ON d.developer_id = dtp.developer_id\n" +
+                    "WHERE dtp.project_id = ?;";
+    private static final String FIND_DEVELOPERS_EXCLUDING_CURRENT_PROJECT =
+            "SELECT d.developer_id, d.first_name, d.last_name, d.age, d.sex, d.company_id, d.salary FROM developers d \n" +
+                    "EXCEPT SELECT d.developer_id, d.first_name, d.last_name, d.age, d.sex, d.company_id, d.salary FROM developers d \n" +
+                    "JOIN developerstoprojects dtp ON d.developer_id = dtp.developer_id\n" +
+                    "WHERE dtp.project_id = ?;";
     private static final String FIND_ALL_UNEMPLOYED =
             "SELECT * FROM developers d\n" +
-            "JOIN companies c ON d.company_id = c.company_id\n" +
-            "WHERE c.company_name = 'Unemployed';";
+                    "JOIN companies c ON d.company_id = c.company_id\n" +
+                    "WHERE c.company_name = 'Unemployed';";
 
     private final static String FIND_JAVA_DEVELOPERS =
             "SELECT d.developer_id, d.first_name, d.last_name, d.age, d.sex, d.company_id, d.salary\n" +
@@ -211,6 +220,30 @@ public class DeveloperRepository {
         try (Connection connection = databaseManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(FIND_BY_COMPANY_ID)) {
             preparedStatement.setLong(1, companyId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            return mapToDeveloperDaos(resultSet);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return new ArrayList<>();
+    }
+
+    public List<DeveloperDao> findByProjectId(Integer projectId) {
+        try (Connection connection = databaseManager.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(FIND_BY_PROJECT_ID)) {
+            preparedStatement.setLong(1, projectId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            return mapToDeveloperDaos(resultSet);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return new ArrayList<>();
+    }
+
+    public List<DeveloperDao> findWithoutThisProjectId(Integer projectId) {
+        try (Connection connection = databaseManager.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(FIND_DEVELOPERS_EXCLUDING_CURRENT_PROJECT)) {
+            preparedStatement.setLong(1, projectId);
             ResultSet resultSet = preparedStatement.executeQuery();
             return mapToDeveloperDaos(resultSet);
         } catch (SQLException throwables) {

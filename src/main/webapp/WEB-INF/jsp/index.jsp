@@ -9,6 +9,9 @@
 
     <body>
         <c:import url="${contextPath}/WEB-INF/jsp/navibar.jsp"/>
-        That's the first page
+        <div class="container">
+            Welcome to Project Management System.<br>
+            Use navigation bar to work with database.
+        </div>
     </body>
 </html>

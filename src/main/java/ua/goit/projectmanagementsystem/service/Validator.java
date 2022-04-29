@@ -1,6 +1,5 @@
 package ua.goit.projectmanagementsystem.service;
 
-import com.oracle.wls.shaded.org.apache.xalan.xsltc.runtime.ErrorMessages_es;
 import jakarta.servlet.http.HttpServletRequest;
 import ua.goit.projectmanagementsystem.model.ErrorMessage;
 
@@ -52,6 +51,36 @@ public class Validator {
 
         errorMessage.setErrors(errors);
         return errorMessage;
+    }
 
+    public ErrorMessage validateProject(HttpServletRequest req) {
+        ErrorMessage errorMessage = new ErrorMessage();
+        List<String> errors = new ArrayList<>();
+
+        String projectName = req.getParameter("projectName");
+        if (projectName.isBlank()) {
+            errors.add("Project name can not be empty");
+        }
+
+        try {
+            Integer.parseInt(req.getParameter("customerId"));
+        } catch (Exception e) {
+            errors.add("Customer is invalid");
+        }
+
+        try {
+            Integer.parseInt(req.getParameter("companyId"));
+        } catch (Exception e) {
+            errors.add("Company is invalid");
+        }
+
+        try {
+            Integer.parseInt(req.getParameter("projectCost"));
+        } catch (Exception e) {
+            errors.add("Project cost is invalid");
+        }
+
+        errorMessage.setErrors(errors);
+        return errorMessage;
     }
 }

@@ -10,47 +10,49 @@
     <body>
         <c:import url="${contextPath}/WEB-INF/jsp/navibar.jsp"/>
         <div class="container">
-            <form action="/findCompany">
+            <form action="/findProject">
                 <div class="form-group">
-                    <label for="companyName">Company name:</label><br>
-                    <input type="text" class="form-control" id="companyName" placeholder="Enter Company name" name="companyName"><br>
+                    <label for="projectName">Project name:</label><br>
+                    <input type="text" class="form-control" id="projectName" placeholder="Enter Project name" name="projectName"><br>
                 </div>
                     <input type="submit" value="Search">
             </form><br>
 
             <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
                 <div class="btn-group me-2" role="group" aria-label="Second group">
-                   <a href="/companies/new" type="button" class="btn btn-primary">New</a>
+                   <a href="/projects/new" type="button" class="btn btn-primary">New</a>
                 </div>
             </div>
 
             <table class="table table-hover">
                 <thead>
                     <tr>
-                        <td>Company name</td>
-                        <td>Company location</td>
-                        <td>Company employees</td>
+                        <td>Project name</td>
+                        <td>Customer ID</td>
+                        <td>Company ID</td>
+                        <td>Project cost</td>
                     </tr>
                 </thead>
                 <tbody>
-                <c:forEach items="${companies}" var="company">
+                <c:forEach items="${projects}" var="project">
                     <tr>
                         <td>
-                            <c:out value="${company.companyName}"/>
+                            <c:out value="${project.projectName}"/>
                         </td>
                         <td>
-                            <c:out value="${company.companyLocation}"/>
+                            <c:out value="${project.customerId}"/>
                         </td>
                         <td>
-                            <c:forEach items="${company.developers}" var="developer">
-                                <c:out value="${developer.firstName}"/> <c:out value="${developer.lastName}"/><br>
-                            </c:forEach>
+                            <c:out value="${project.companyDto.companyName}"/>
+                        </td>
+                        <td>
+                            <c:out value="${project.projectCost}"/>
                         </td>
                         <td>
                             <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
                                 <div class="btn-group me-2" role="group" aria-label="Second group">
-                                     <a href="/companies/${company.companyId}" type="button" class="btn btn-warning">Edit</a>
-                                     <a href="/companies?deleteId=${company.companyId}" type="button" class="btn btn-danger">Remove</a>
+                                     <a href="/projects/${project.projectId}" type="button" class="btn btn-warning">Edit</a>
+                                     <a href="/projects?deleteId=${project.projectId}" type="button" class="btn btn-danger">Remove</a>
                                 </div>
                             </div>
                         </td>

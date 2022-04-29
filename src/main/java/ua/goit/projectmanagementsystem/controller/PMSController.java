@@ -25,7 +25,6 @@ public class PMSController {
                 new CompanyDeleter(view, companyService),
                 new CompanyUpdater(view, companyService),
                 new SalarySumFinder(view, projectService),
-                new DevsByProjectFinder(view, projectService),
                 new JavaDevsFinder(view, developerService),
                 new MiddleDevsFinder(view, developerService),
                 new AllProjectsFinder(view, projectService)
