@@ -1,16 +1,15 @@
-package ua.goit.projectmanagementsystem.repository;
+package ua.goit.projectmanagementsystem.DAO;
 
 import ua.goit.projectmanagementsystem.config.DatabaseManager;
 import ua.goit.projectmanagementsystem.exception.DeveloperNotFoundException;
+import ua.goit.projectmanagementsystem.model.domain.Developer;
 import ua.goit.projectmanagementsystem.model.domain.Project;
-import ua.goit.projectmanagementsystem.model.dao.DeveloperDao;
-import ua.goit.projectmanagementsystem.model.dao.ProjectDao;
-import ua.goit.projectmanagementsystem.model.dao.SkillDao;
+import ua.goit.projectmanagementsystem.model.domain.Skill;
 
 import java.sql.*;
 import java.util.*;
 
-public class ProjectRepository {
+public class ProjectDAO {
 
     private static final String INSERT = "INSERT INTO projects (project_name, customer_id, company_id, project_cost) VALUES (?, ?, ?, ?);";
     private static final String UPDATE = "UPDATE projects SET project_name = ?, customer_id = ?, company_id = ?, project_cost = ? WHERE project_id = ?;";
@@ -54,7 +53,7 @@ public class ProjectRepository {
 
     private final DatabaseManager databaseManager;
 
-    public ProjectRepository(DatabaseManager databaseManager) {
+    public ProjectDAO(DatabaseManager databaseManager) {
         this.databaseManager = databaseManager;
     }
 
@@ -70,25 +69,25 @@ public class ProjectRepository {
         return Optional.empty();
     }
 
-    public Optional<Set<DeveloperDao>> findDevsByProjectId(Integer projectId) {
-        SkillRepository skillRepository = new SkillRepository(databaseManager);
+    public Optional<Set<Developer>> findDevsByProjectId(Integer projectId) {
+        SkillDAO skillRepository = new SkillDAO(databaseManager);
         try (Connection connection = databaseManager.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(FIND_DEVELOPERS_BY_PROJECT_ID)) {
             preparedStatement.setInt(1, projectId);
             ResultSet resultSet = preparedStatement.executeQuery();
-            Set<DeveloperDao> developers = new HashSet<>();
+            Set<Developer> developers = new HashSet<>();
             while (resultSet.next()) {
-                DeveloperDao developerDao = new DeveloperDao();
-                developerDao.setDeveloperId(resultSet.getInt("developer_id"));
-                developerDao.setFirstname(resultSet.getString("first_name"));
-                developerDao.setLastname(resultSet.getString("last_name"));
-                developerDao.setAge(Integer.parseInt(resultSet.getString("age")));
-                developerDao.setSex(resultSet.getString("sex"));
-                developerDao.setCompanyId(Integer.parseInt(resultSet.getString("company_id")));
-                developerDao.setSalary(Integer.parseInt(resultSet.getString("salary")));
-                Set<SkillDao> skills = skillRepository.getSkillsByDeveloperId(developerDao.getDeveloperId()).orElseThrow(()
-                        -> new DeveloperNotFoundException(String.format("Developer with ID %d does not exist", developerDao.getDeveloperId())));;
-                developerDao.setSkills(skills);
-                developers.add(developerDao);
+                Developer developer = new Developer();
+                developer.setDeveloperId(resultSet.getInt("developer_id"));
+                developer.setFirstName(resultSet.getString("first_name"));
+                developer.setLastName(resultSet.getString("last_name"));
+                developer.setAge(Integer.parseInt(resultSet.getString("age")));
+                developer.setSex(resultSet.getString("sex"));
+                developer.setCompanyId(Integer.parseInt(resultSet.getString("company_id")));
+                developer.setSalary(Integer.parseInt(resultSet.getString("salary")));
+                Set<Skill> skills = skillRepository.getSkillsByDeveloperId(developer.getDeveloperId()).orElseThrow(()
+                        -> new DeveloperNotFoundException(String.format("Developer with ID %d does not exist", developer.getDeveloperId())));;
+                developer.setSkills(skills);
+                developers.add(developer);
             }
             return Optional.ofNullable(developers);
         } catch (SQLException throwables) {
@@ -97,18 +96,18 @@ public class ProjectRepository {
         return Optional.empty();
     }
 
-    public Optional<HashMap<ProjectDao, Integer>> findAllProjectsWithDevelopersNumber () {
+    public Optional<HashMap<Project, Integer>> findAllProjectsWithDevelopersNumber () {
         try (Connection connection = databaseManager.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(FIND_ALL_JOIN)) {
             ResultSet resultSet = preparedStatement.executeQuery();
-            HashMap<ProjectDao, Integer> projects = new HashMap<>();
+            HashMap<Project, Integer> projects = new HashMap<>();
             while (resultSet.next()) {
-                ProjectDao projectDao = new ProjectDao();
-                projectDao.setProjectId(resultSet.getInt("project_id"));
-                projectDao.setProjectName(resultSet.getString("project_name"));
-                projectDao.setCompanyId(resultSet.getInt("company_id"));
-                projectDao.setCustomerId(resultSet.getInt("customer_id"));
-                projectDao.setProjectCost(resultSet.getInt("project_cost"));
-                projects.put(projectDao, resultSet.getInt("developers_number"));
+                Project project = new Project();
+                project.setProjectId(resultSet.getInt("project_id"));
+                project.setProjectName(resultSet.getString("project_name"));
+                project.setCompanyId(resultSet.getInt("company_id"));
+                project.setCustomerId(resultSet.getInt("customer_id"));
+                project.setProjectCost(resultSet.getInt("project_cost"));
+                projects.put(project, resultSet.getInt("developers_number"));
             }
             return Optional.ofNullable(projects);
         } catch (SQLException throwables) {

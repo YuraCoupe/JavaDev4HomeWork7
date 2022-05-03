@@ -10,10 +10,15 @@
     <body>
         <c:import url="${contextPath}/WEB-INF/jsp/navibar.jsp"/>
         <div class="container">
-            <form action="/findProject">
+            <form action="/projects">
                 <div class="form-group">
-                    <label for="projectName">Project name:</label><br>
-                    <input type="text" class="form-control" id="projectName" placeholder="Enter Project name" name="projectName"><br>
+                    <label for="projectId">Project name:</label><br>
+                    <select class="form-control" id="projectId" name="projectId">
+                        <option disabled selected value> -- select project -- </option>
+                        <c:forEach items="${projects}" var="project">
+                            <option value="${project.projectId}"><c:out value="${project.projectName}"/></option>
+                        </c:forEach>
+                    </select>
                 </div>
                     <input type="submit" value="Search">
             </form><br>

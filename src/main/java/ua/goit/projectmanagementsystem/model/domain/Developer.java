@@ -1,18 +1,18 @@
-package ua.goit.projectmanagementsystem.model.dto;
+package ua.goit.projectmanagementsystem.model.domain;
 
 import java.util.Objects;
 import java.util.Set;
 
-public class DeveloperDto {
+public class Developer {
     private Integer developerId;
     private String firstName;
     private String lastName;
     private Integer age;
     private String sex;
-    private CompanyDto company;
+    private Integer companyId;
     private Integer salary;
-    private Set<SkillDto> skills;
-    private Set<ProjectDto> projects;
+    private Set<Skill> skills;
+    private Set<Project> projects;
 
     public Integer getDeveloperId() {
         return developerId;
@@ -54,12 +54,12 @@ public class DeveloperDto {
         this.sex = sex;
     }
 
-    public CompanyDto getCompany() {
-        return company;
+    public Integer getCompanyId() {
+        return companyId;
     }
 
-    public void setCompany(CompanyDto company) {
-        this.company = company;
+    public void setCompanyId(Integer companyId) {
+        this.companyId = companyId;
     }
 
     public Integer getSalary() {
@@ -70,23 +70,23 @@ public class DeveloperDto {
         this.salary = salary;
     }
 
-    public Set<SkillDto> getSkills() {
+    public Set<Skill> getSkills() {
         return skills;
     }
 
-    public void setSkills(Set<SkillDto> skills) {
+    public void setSkills(Set<Skill> skills) {
         this.skills = skills;
     }
 
-    public Set<ProjectDto> getProjects() {
+    public Set<Project> getProjects() {
         return projects;
     }
 
-    public void setProjects(Set<ProjectDto> projects) {
+    public void setProjects(Set<Project> projects) {
         this.projects = projects;
     }
 
-    public DeveloperDto() {
+    public Developer() {
     }
 
     @Override
@@ -97,7 +97,7 @@ public class DeveloperDto {
                 ", lastName='" + lastName + '\'' +
                 ", age=" + age +
                 ", sex='" + sex + '\'' +
-                ", company=" + company +
+                ", companyId=" + companyId +
                 ", salary=" + salary +
                 ", skills=" + skills +
                 ", projects=" + projects +
@@ -108,7 +108,7 @@ public class DeveloperDto {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        DeveloperDto that = (DeveloperDto) o;
+        Developer that = (Developer) o;
         return developerId.equals(that.developerId) && firstName.equals(that.firstName)
                 && lastName.equals(that.lastName) && age.equals(that.age);
     }

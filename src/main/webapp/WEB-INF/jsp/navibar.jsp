@@ -11,14 +11,6 @@
                       <li><a href="/companies/new">New</a></li>
                     </ul>
                   </li>
-                  <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Customers <span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                      <li><a href="/#">Find</a></li>
-                      <li><a href="/#">Create</a></li>
-                      <li><a href="/#">Update</a></li>
-                      <li><a href="/#">Delete</a></li>
-                    </ul>
-                  </li>
                   <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="/developers">Developers <span class="caret"></span></a>
                    <ul class="dropdown-menu">
                      <li><a href="/developers">List</a></li>
@@ -29,14 +21,6 @@
                    <ul class="dropdown-menu">
                      <li><a href="/projects">Find</a></li>
                      <li><a href="/projects/new">Create</a></li>
-                   </ul>
-                  </li>
-                  <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Skills <span class="caret"></span></a>
-                   <ul class="dropdown-menu">
-                     <li><a href="/#">Find</a></li>
-                     <li><a href="/#">Create</a></li>
-                     <li><a href="/#">Update</a></li>
-                     <li><a href="/#">Delete</a></li>
                    </ul>
                   </li>
                 </ul>

@@ -6,15 +6,16 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import ua.goit.projectmanagementsystem.DAO.DeveloperDAO;
+import ua.goit.projectmanagementsystem.DAO.ProjectDAO;
 import ua.goit.projectmanagementsystem.config.DatabaseManager;
 import ua.goit.projectmanagementsystem.config.PostgresHikariProvider;
 import ua.goit.projectmanagementsystem.config.PropertiesUtil;
 import ua.goit.projectmanagementsystem.model.ErrorMessage;
-import ua.goit.projectmanagementsystem.model.converter.*;
+import ua.goit.projectmanagementsystem.model.domain.Company;
+import ua.goit.projectmanagementsystem.model.domain.Developer;
 import ua.goit.projectmanagementsystem.model.dto.CompanyDto;
-import ua.goit.projectmanagementsystem.model.dto.DeveloperDto;
-import ua.goit.projectmanagementsystem.repository.CompanyRepository;
-import ua.goit.projectmanagementsystem.repository.DeveloperRepository;
+import ua.goit.projectmanagementsystem.DAO.CompanyDAO;
 import ua.goit.projectmanagementsystem.service.CompanyService;
 import ua.goit.projectmanagementsystem.service.DeveloperService;
 import ua.goit.projectmanagementsystem.service.Validator;
@@ -36,20 +37,23 @@ public class CompaniesServlet extends HttpServlet {
 
         DatabaseManager dbConnector = new PostgresHikariProvider(util.getHostname(), util.getPort(),
                 util.getSchema(), util.getUser(), util.getPassword(), util.getJdbcDriver());
-        this.companyService = new CompanyService(new CompanyRepository(dbConnector), new CompanyConverter());
-        this.developerService = new DeveloperService(new DeveloperRepository(dbConnector), new CompanyRepository(dbConnector), new DeveloperShortConverter(), new DeveloperConverter(new SkillConverter(), new CompanyConverter()), new DeveloperProjectConverter(new DeveloperConverter(new SkillConverter(), new CompanyConverter()), new ProjectConverter()));
-        validator = new Validator();
+        CompanyDAO companyDAO = new CompanyDAO(dbConnector);
+        DeveloperDAO developerDAO = new DeveloperDAO(dbConnector);
+        ProjectDAO projectDAO = new ProjectDAO(dbConnector);
+        this.companyService = new CompanyService(companyDAO);
+        this.developerService = new DeveloperService(developerDAO, companyDAO);
+        validator = new Validator(companyDAO, developerDAO, projectDAO);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         Integer companyId = null;
-        CompanyDto companyDto = new CompanyDto();
+        Company company = new Company();
 
         if (!req.getParameter("companyId").isBlank()) {
             companyId = Integer.parseInt(req.getParameter("companyId"));
-            companyDto.setCompanyId(companyId);
+            company.setCompanyId(companyId);
         }
 
         ErrorMessage errorMessage = validator.validateCompany(req);
@@ -66,23 +70,23 @@ public class CompaniesServlet extends HttpServlet {
         String companyName = req.getParameter("companyName");
         String companyLocation = req.getParameter("companyLocation");
 
-        companyDto.setCompanyName(companyName);
-        companyDto.setCompanyLocation(companyLocation);
+        company.setCompanyName(companyName);
+        company.setCompanyLocation(companyLocation);
 
         if (Objects.isNull(companyId)) {
-            companyId = companyService.save(companyDto);
+            companyId = companyService.save(company);
         } else {
-            companyService.update(companyDto);
+            companyService.update(company);
         }
 
         Integer developerId;
-        DeveloperDto developerDto;
+        Developer developer;
         if (Objects.nonNull(req.getParameter("developerId"))) {
             developerId = Integer.parseInt(req.getParameter("developerId"));
-            developerDto = developerService.findById(developerId);
-            companyDto = companyService.finbById(companyId);
-            developerDto.setCompany(companyDto);
-            developerService.update(developerDto);
+            developer = developerService.findById(developerId);
+            //companyDto = companyService.finbById(companyId);
+            developer.setCompanyId(companyId);
+            developerService.update(developer);
         }
         resp.sendRedirect("/companies");
     }
@@ -92,48 +96,51 @@ public class CompaniesServlet extends HttpServlet {
         String requestURI = req.getRequestURI();
         String idStr = requestURI.replaceAll("/companies/?", "");
         String deleteId = req.getParameter("deleteId");
+        String companyId = req.getParameter("companyId");
         if (deleteId != null) {
-            CompanyDto companyDto = companyService.finbById(Integer.parseInt(deleteId));
-            companyService.delete(companyDto);
+            Company company = companyService.finbById(Integer.parseInt(deleteId));
+            companyService.delete(company);
             resp.sendRedirect("/companies");
         } else if ("new".equalsIgnoreCase(idStr)) {
             handleNew(req, resp);
+        } else if (companyId != null) {
+            handleId(Integer.parseInt(companyId), req, resp);
         } else if (!idStr.equals("")) {
             try {
                 Integer id = Integer.parseInt(idStr);
                 String removeId = req.getParameter("removeId");
                 if (removeId != null) {
-                    DeveloperDto developerDto = developerService.findById(Integer.parseInt(removeId));
-                    CompanyDto companyDto = companyService.findByName("Unemployed");
-                    developerDto.setCompany(companyDto);
-                    developerService.update(developerDto);
+                    Developer developer = developerService.findById(Integer.parseInt(removeId));
+                    Company company = companyService.findByName("Unemployed");
+                    developer.setCompanyId(company.getCompanyId());
+                    developerService.update(developer);
                 }
                 handleId(id, req, resp);
             } catch (RuntimeException e) {
                 resp.sendRedirect("/companies");
             }
         } else {
-            List<CompanyDto> companies = companyService.findAllExUnemployed();
+            List<Company> companies = companyService.findAllExUnemployed();
             req.setAttribute("companies", companies);
             req.getRequestDispatcher("/WEB-INF/jsp/companies.jsp").forward(req, resp);
         }
     }
 
     private void handleNew(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.setAttribute("company", new CompanyDto());
+        req.setAttribute("company", new Company());
         //List<CompanyDto> all = service.findAll();
         //req.setAttribute("companies", all);
-        List<DeveloperDto> unemployedDevelopers = developerService.findAllUnemployed();
+        List<Developer> unemployedDevelopers = developerService.findAllUnemployed();
         req.setAttribute("unemployedDevelopers", unemployedDevelopers);
         req.getRequestDispatcher("/WEB-INF/jsp/company.jsp").forward(req, resp);
     }
 
     private void handleId(Integer id, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        CompanyDto company = companyService.finbById(id);
+        Company company = companyService.finbById(id);
         req.setAttribute("company", company);
-        List<DeveloperDto> developers = developerService.findByCompanyId(company.getCompanyId());
+        List<Developer> developers = developerService.findByCompanyId(company.getCompanyId());
         req.setAttribute("developers", developers);
-        List<DeveloperDto> unemployedDevelopers = developerService.findAllUnemployed();
+        List<Developer> unemployedDevelopers = developerService.findAllUnemployed();
         req.setAttribute("unemployedDevelopers", unemployedDevelopers);
         req.setCharacterEncoding("UTF-8");
         req.getRequestDispatcher("/WEB-INF/jsp/company.jsp").forward(req, resp);

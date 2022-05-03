@@ -2,8 +2,7 @@ package ua.goit.projectmanagementsystem.service;
 
 import ua.goit.projectmanagementsystem.exception.CompanyNotFoundException;
 import ua.goit.projectmanagementsystem.model.domain.DeveloperProject;
-import ua.goit.projectmanagementsystem.model.dto.CompanyDto;
-import ua.goit.projectmanagementsystem.repository.DeveloperProjectDAO;
+import ua.goit.projectmanagementsystem.DAO.DeveloperProjectDAO;
 
 
 public class DeveloperProjectService {

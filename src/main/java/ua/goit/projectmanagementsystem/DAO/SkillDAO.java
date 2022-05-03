@@ -1,7 +1,7 @@
-package ua.goit.projectmanagementsystem.repository;
+package ua.goit.projectmanagementsystem.DAO;
 
 import ua.goit.projectmanagementsystem.config.DatabaseManager;
-import ua.goit.projectmanagementsystem.model.dao.SkillDao;
+import ua.goit.projectmanagementsystem.model.domain.Skill;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -11,7 +11,7 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
-public class SkillRepository {
+public class SkillDAO {
     private static final String GET_SKILLS_BY_DEVELOPER_ID =
             "SELECT dts.developer_id, s.skill_id, s.specialization, s.level\n" +
                     "FROM developerstoskills dts\n" +
@@ -20,21 +20,21 @@ public class SkillRepository {
 
     private final DatabaseManager databaseManager;
 
-    public SkillRepository(DatabaseManager databaseManager) {
+    public SkillDAO(DatabaseManager databaseManager) {
         this.databaseManager = databaseManager;
     }
 
-    public Optional<Set<SkillDao>> getSkillsByDeveloperId(Integer developerId) {
+    public Optional<Set<Skill>> getSkillsByDeveloperId(Integer developerId) {
         try (Connection connection = databaseManager.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(GET_SKILLS_BY_DEVELOPER_ID)) {
             preparedStatement.setInt(1, developerId);
             ResultSet resultSet = preparedStatement.executeQuery();
-            Set<SkillDao> skills = new HashSet<>();
+            Set<Skill> skills = new HashSet<>();
             while (resultSet.next()) {
-                SkillDao skillDao = new SkillDao();
-                skillDao.setSkillId(resultSet.getInt("skill_id"));
-                skillDao.setLevel(resultSet.getString("level"));
-                skillDao.setSpecialization(resultSet.getString("specialization"));
-                skills.add(skillDao);
+                Skill skill = new Skill();
+                skill.setSkillId(resultSet.getInt("skill_id"));
+                skill.setLevel(resultSet.getString("level"));
+                skill.setSpecialization(resultSet.getString("specialization"));
+                skills.add(skill);
             }
             return Optional.ofNullable(skills);
         } catch (SQLException throwables) {

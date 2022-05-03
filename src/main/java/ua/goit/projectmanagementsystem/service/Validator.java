@@ -1,12 +1,27 @@
 package ua.goit.projectmanagementsystem.service;
 
 import jakarta.servlet.http.HttpServletRequest;
+import ua.goit.projectmanagementsystem.DAO.CompanyDAO;
+import ua.goit.projectmanagementsystem.DAO.DeveloperDAO;
+import ua.goit.projectmanagementsystem.DAO.DeveloperProjectDAO;
+import ua.goit.projectmanagementsystem.DAO.ProjectDAO;
 import ua.goit.projectmanagementsystem.model.ErrorMessage;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Validator {
+
+    private final CompanyDAO companyDAO;
+    private final DeveloperDAO developerDAO;
+    private final ProjectDAO projectDAO;
+
+    public Validator(CompanyDAO companyDAO, DeveloperDAO developerDAO, ProjectDAO projectDAO) {
+        this.companyDAO = companyDAO;
+        this.developerDAO = developerDAO;
+        this.projectDAO = projectDAO;
+    }
+
     public ErrorMessage validateCompany(HttpServletRequest req) {
         ErrorMessage errorMessage = new ErrorMessage();
         List<String> errors = new ArrayList<>();
@@ -15,6 +30,12 @@ public class Validator {
         if (companyName.isBlank()) {
             errors.add("Company name can not be empty");
         }
+
+        String companyIdString = req.getParameter("companyId");
+        if (companyIdString.isBlank() & companyDAO.findByName(companyName).isPresent()) {
+            errors.add(String.format("Company with name %s already exists", companyName));
+        }
+
         String companyLocation = req.getParameter("companyLocation");
         if (companyLocation.isBlank()) {
             errors.add("Company location can not be empty");
@@ -35,6 +56,10 @@ public class Validator {
         String lastName = req.getParameter("lastName");
         if (lastName.isBlank()) {
             errors.add("Last name can not be empty");
+        }
+
+        if (developerDAO.findByName(firstName, lastName).isPresent()) {
+            errors.add(String.format("Developer with name %s %s already exists", firstName, lastName));
         }
 
         try {
@@ -60,6 +85,11 @@ public class Validator {
         String projectName = req.getParameter("projectName");
         if (projectName.isBlank()) {
             errors.add("Project name can not be empty");
+        }
+
+        String projectIdString = req.getParameter("projectId");
+        if (projectIdString.isBlank() & projectDAO.findByName(projectName).isPresent()) {
+            errors.add(String.format("Project with name %s already exists", projectName));
         }
 
         try {

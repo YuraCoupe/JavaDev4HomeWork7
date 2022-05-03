@@ -2,121 +2,113 @@ package ua.goit.projectmanagementsystem.service;
 
 import ua.goit.projectmanagementsystem.exception.CompanyAlreadyExistException;
 import ua.goit.projectmanagementsystem.exception.CompanyNotFoundException;
-import ua.goit.projectmanagementsystem.model.converter.DeveloperShortConverter;
-import ua.goit.projectmanagementsystem.model.converter.DeveloperConverter;
-import ua.goit.projectmanagementsystem.model.converter.DeveloperProjectConverter;
-import ua.goit.projectmanagementsystem.model.dao.CompanyDao;
-import ua.goit.projectmanagementsystem.model.dao.DeveloperDao;
-import ua.goit.projectmanagementsystem.model.dto.DeveloperDto;
-import ua.goit.projectmanagementsystem.repository.CompanyRepository;
-import ua.goit.projectmanagementsystem.repository.DeveloperRepository;
+import ua.goit.projectmanagementsystem.exception.DeveloperNotFoundException;
+import ua.goit.projectmanagementsystem.model.domain.Company;
+import ua.goit.projectmanagementsystem.model.domain.Developer;
+import ua.goit.projectmanagementsystem.DAO.CompanyDAO;
+import ua.goit.projectmanagementsystem.DAO.DeveloperDAO;
+import ua.goit.projectmanagementsystem.model.domain.Project;
+import ua.goit.projectmanagementsystem.model.dto.DeveloperWithCompanyDto;
+import ua.goit.projectmanagementsystem.model.dto.ProjectWithCompanyDto;
 
 import java.util.List;
-
 import java.util.stream.Collectors;
 
 public class DeveloperService {
-    public final DeveloperRepository developerRepository;
-    public final CompanyRepository companyRepository;
-    public final DeveloperShortConverter developerShortConverter;
-    public final DeveloperConverter developerConverter;
-    public final DeveloperProjectConverter developerProjectConverter;
+    public final DeveloperDAO developerDAO;
+    public final CompanyDAO companyDAO;
 
-    public DeveloperService(DeveloperRepository developerRepository, CompanyRepository companyRepository, DeveloperShortConverter developerShortConverter, DeveloperConverter developerConverter, DeveloperProjectConverter developerProjectConverter) {
-        this.developerRepository = developerRepository;
-        this.companyRepository = companyRepository;
-        this.developerShortConverter = developerShortConverter;
-        this.developerConverter = developerConverter;
-        this.developerProjectConverter = developerProjectConverter;
+    public DeveloperService(DeveloperDAO developerDAO, CompanyDAO companyDAO) {
+        this.developerDAO = developerDAO;
+        this.companyDAO = companyDAO;
     }
 
-    public DeveloperDto findByName(String firstName, String lastName) {
-        DeveloperDao developerDao = developerRepository.findByName(firstName, lastName).orElseThrow(()
+    public Developer findByName(String firstName, String lastName) {
+        Developer developer = developerDAO.findByName(firstName, lastName).orElseThrow(()
                 -> new CompanyNotFoundException(String.format("Developer %s %s does not exist", firstName, lastName)));
-        CompanyDao companyDao = companyRepository.findById(developerDao.getCompanyId()).orElseThrow(()
+        Company company = companyDAO.findById(developer.getCompanyId()).orElseThrow(()
                 -> new CompanyNotFoundException(String.format("Company does not exist")));
-        return developerConverter.daoToDto(developerDao, companyDao);
+        return developer;
     }
 
     public boolean isDeveloperExist(String firstName, String lastName) {
-        return developerRepository.findByName(firstName, lastName).isPresent();
+        return developerDAO.findByName(firstName, lastName).isPresent();
     }
 
-    public void save(DeveloperDto developerDto) {
-        if (developerRepository.findByName(developerDto.getFirstName(), developerDto.getLastName()).isEmpty()) {
-            developerRepository.save(developerConverter.dtoToDao(developerDto));
+    public void save(Developer developer) {
+        if (developerDAO.findByName(developer.getFirstName(), developer.getLastName()).isEmpty()) {
+            developerDAO.save(developer);
         } else {
             throw new CompanyAlreadyExistException("This developer already exists");
         }
     }
 
-    public void delete(DeveloperDto developerDto) {
-        if (!developerRepository.findById(developerDto.getCompany().getCompanyId()).isEmpty()) {
-            developerRepository.delete(developerConverter.dtoToDao(developerDto));
+    public void delete(Developer developer) {
+        if (!developerDAO.findById(developer.getDeveloperId()).isEmpty()) {
+            developerDAO.delete(developer);
         } else {
-            throw new CompanyNotFoundException("This developer doesn't exist");
+            throw new DeveloperNotFoundException("This developer doesn't exist");
         }
     }
 
-    public void update(DeveloperDto developerDto) {
-        developerRepository.update(developerConverter.dtoToDao(developerDto));
+    public void update(Developer developer) {
+        developerDAO.update(developer);
     }
 
-    public List<DeveloperDto> findAll() {
-        return developerRepository.findAll()
-                .stream()
-                .map(developerDao -> {CompanyDao companyDao = companyRepository.findById(developerDao.getCompanyId()).orElseThrow(()
-                        -> new CompanyNotFoundException(String.format("Company does not exist")));
-                    return developerConverter.daoToDto(developerDao, companyDao);
-                })
-                .collect(Collectors.toList());
+    public List<Developer> findAll() {
+        return developerDAO.findAll().orElseThrow(() -> new DeveloperNotFoundException("Developer doesn't exist"));
     }
 
-    public DeveloperDto findById(Integer id) {
-        DeveloperDao developerDao = developerRepository.findById(id).orElseThrow(()
+    public Developer findById(Integer id) {
+        Developer developer = developerDAO.findById(id).orElseThrow(()
                 -> new CompanyNotFoundException(String.format("Developer with %d does not exist", id)));
-        CompanyDao companyDao = companyRepository.findById(developerDao.getCompanyId()).orElseThrow(()
-                -> new CompanyNotFoundException(String.format("Company does not exist")));
-        return developerConverter.daoToDto(developerDao, companyDao);
+        return developer;
     }
 
-    public List<DeveloperDto> findByCompanyId(Integer companyId) {
-        return developerRepository.findByCompanyId(companyId)
-                .stream()
-                .map(developerDao -> {CompanyDao companyDao = companyRepository.findById(developerDao.getCompanyId()).orElseThrow(()
-                        -> new CompanyNotFoundException(String.format("Company does not exist")));
-                    return developerConverter.daoToDto(developerDao, companyDao);
-                })
-                .collect(Collectors.toList());
+    public List<Developer> findByCompanyId(Integer companyId) {
+        return developerDAO.findByCompanyId(companyId);
     }
 
-    public List<DeveloperDto> findByProjectId(Integer projectId) {
-        return developerRepository.findByProjectId(projectId)
-                .stream()
-                .map(developerDao -> {CompanyDao companyDao = companyRepository.findById(developerDao.getCompanyId()).orElseThrow(()
-                        -> new CompanyNotFoundException(String.format("Company does not exist")));
-                    return developerConverter.daoToDto(developerDao, companyDao);
-                })
-                .collect(Collectors.toList());
+    public List<Developer> findByProjectId(Integer projectId) {
+        return developerDAO.findByProjectId(projectId);
     }
 
-    public List<DeveloperDto> findWithoutThisProjectId(Integer projectId) {
-        return developerRepository.findWithoutThisProjectId(projectId)
-                .stream()
-                .map(developerDao -> {CompanyDao companyDao = companyRepository.findById(developerDao.getCompanyId()).orElseThrow(()
-                        -> new CompanyNotFoundException(String.format("Company does not exist")));
-                    return developerConverter.daoToDto(developerDao, companyDao);
-                })
-                .collect(Collectors.toList());
+    public List<Developer> findWithoutThisProjectId(Integer projectId) {
+        return developerDAO.findWithoutThisProjectId(projectId);
     }
 
-    public List<DeveloperDto> findAllUnemployed() {
-        return developerRepository.findAllUnemployed()
-                .stream()
-                .map(developerDao -> {CompanyDao companyDao = companyRepository.findById(developerDao.getCompanyId()).orElseThrow(()
-                        -> new CompanyNotFoundException(String.format("Company does not exist")));
-                    return developerConverter.daoToDto(developerDao, companyDao);
+    public List<Developer> findAllUnemployed() {
+        return developerDAO.findAllUnemployed();
+    }
+
+    public List<DeveloperWithCompanyDto> findAllWithCompany() {
+        List<Developer> developers = developerDAO.findAll().orElseThrow(()
+                -> new DeveloperNotFoundException("Developers do not exist"));
+        List<DeveloperWithCompanyDto> developerWithCompanyDtos = developers.stream()
+                .map(developer -> {
+                    DeveloperWithCompanyDto developerWithCompanyDto = new DeveloperWithCompanyDto();
+                    developerWithCompanyDto.setDeveloperId(developer.getDeveloperId());
+                    developerWithCompanyDto.setFirstName(developer.getFirstName());
+                    developerWithCompanyDto.setLastName(developer.getLastName());
+                    developerWithCompanyDto.setAge(developer.getAge());
+                    developerWithCompanyDto.setSex(developer.getSex());
+                    developerWithCompanyDto.setCompanyId(developer.getCompanyId());
+                    developerWithCompanyDto.setSalary(developer.getSalary());
+                    developerWithCompanyDto.setCompany(companyDAO.findById(developer.getCompanyId()).orElseThrow(()
+                            -> new CompanyNotFoundException(String.format("Company %d does not exist", developer.getCompanyId()))));
+                    return developerWithCompanyDto;
                 })
                 .collect(Collectors.toList());
+        return developerWithCompanyDtos;
     }
 }
+
+/*
+return developerDAO.findAllUnemployed()
+                .stream()
+                .map(developerDao -> {CompanyDao companyDao = companyDAO.findById(developerDao.getCompanyId()).orElseThrow(()
+                        -> new CompanyNotFoundException(String.format("Company does not exist")));
+                    return developerConverter.daoToDto(developerDao, companyDao);
+                })
+                .collect(Collectors.toList());
+ */

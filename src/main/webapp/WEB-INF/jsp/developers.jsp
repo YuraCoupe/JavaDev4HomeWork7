@@ -10,6 +10,18 @@
     <body>
         <c:import url="${contextPath}/WEB-INF/jsp/navibar.jsp"/>
         <div class="container">
+            <form action="/developers">
+                <div class="form-group">
+                    <label for="developerId">Project name:</label><br>
+                    <select class="form-control" id="developerId" name="developerId">
+                        <option disabled selected value> -- select developer -- </option>
+                        <c:forEach items="${developers}" var="developer">
+                            <option value="${developer.developerId}"><c:out value="${developer.firstName}"/> <c:out value="${developer.lastName}"/></option>
+                        </c:forEach>
+                    </select>
+                </div>
+                    <input type="submit" value="Search">
+            </form><br>
 
             <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
                 <div class="btn-group me-2" role="group" aria-label="Second group">

@@ -2,70 +2,60 @@ package ua.goit.projectmanagementsystem.service;
 
 import ua.goit.projectmanagementsystem.exception.CompanyAlreadyExistException;
 import ua.goit.projectmanagementsystem.exception.CompanyNotFoundException;
-import ua.goit.projectmanagementsystem.model.converter.CompanyConverter;
-import ua.goit.projectmanagementsystem.model.dto.CompanyDto;
-import ua.goit.projectmanagementsystem.repository.CompanyRepository;
+import ua.goit.projectmanagementsystem.model.domain.Company;
+import ua.goit.projectmanagementsystem.DAO.CompanyDAO;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class CompanyService {
-    private final CompanyRepository companyRepository;
-    private final CompanyConverter companyConverter;
+    private final CompanyDAO companyDAO;
 
-    public CompanyService(CompanyRepository companyRepository, CompanyConverter companyConverter) {
-        this.companyRepository = companyRepository;
-        this.companyConverter = companyConverter;
+    public CompanyService(CompanyDAO companyDAO) {
+        this.companyDAO = companyDAO;
     }
 
-    public CompanyDto findByName(String name) {
-        return companyConverter.daoToDto(companyRepository.findByName(name).orElseThrow(()
-                -> new CompanyNotFoundException(String.format("Company %s does not exist", name))));
+    public Company findByName(String name) {
+        return companyDAO.findByName(name).orElseThrow(()
+                -> new CompanyNotFoundException(String.format("Company %s does not exist", name)));
     }
 
     public boolean isCompanyExist(String name) {
-        return companyRepository.findByName(name).isPresent();
+        return companyDAO.findByName(name).isPresent();
     }
 
-    public Integer save(CompanyDto companyDto) {
+    public Integer save(Company company) {
         Integer id = null;
-        if (companyRepository.findByName(companyDto.getCompanyName()).isEmpty()) {
-            id = companyRepository.save(companyConverter.dtoToDao(companyDto));
+        if (companyDAO.findByName(company.getCompanyName()).isEmpty()) {
+            id = companyDAO.save(company);
         } else {
             throw new CompanyAlreadyExistException("This company already exists");
         }
         return id;
     }
 
-    public void delete(CompanyDto companyDto) {
-        if (!companyRepository.findById(companyDto.getCompanyId()).isEmpty()) {
-            companyRepository.delete(companyConverter.dtoToDao(companyDto));
+    public void delete(Company company) {
+        if (!companyDAO.findById(company.getCompanyId()).isEmpty()) {
+            companyDAO.delete(company);
         } else {
             throw new CompanyNotFoundException("This company doesn't exist");
         }
     }
 
-    public void update(CompanyDto companyDto) {
-            companyRepository.update(companyConverter.dtoToDao(companyDto));
+    public void update(Company company) {
+            companyDAO.update(company);
     }
 
-    public List<CompanyDto> findAll() {
-        return companyRepository.findAll()
-                .stream()
-                .map(companyDao -> companyConverter.daoToDto(companyDao))
-                .collect(Collectors.toList());
+    public List<Company> findAll() {
+        return companyDAO.findAll();
     }
 
-    public List<CompanyDto> findAllExUnemployed() {
-        return companyRepository.findAllExUnemployed()
-                .stream()
-                .map(companyDao -> companyConverter.daoToDto(companyDao))
-                .collect(Collectors.toList());
+    public List<Company> findAllExUnemployed() {
+        return companyDAO.findAllExUnemployed();
     }
 
-    public CompanyDto finbById(Integer id) {
-        return companyConverter.daoToDto(companyRepository.findById(id).orElseThrow(()
-                -> new CompanyNotFoundException(String.format("Company %d does not exist", id))));
+    public Company finbById(Integer id) {
+        return companyDAO.findById(id).orElseThrow(()
+                -> new CompanyNotFoundException(String.format("Company %d does not exist", id)));
     }
 }
 

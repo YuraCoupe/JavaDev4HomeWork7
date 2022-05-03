@@ -9,15 +9,15 @@ import ua.goit.projectmanagementsystem.config.DatabaseManager;
 import ua.goit.projectmanagementsystem.config.PostgresHikariProvider;
 import ua.goit.projectmanagementsystem.config.PropertiesUtil;
 import ua.goit.projectmanagementsystem.model.ErrorMessage;
-import ua.goit.projectmanagementsystem.model.converter.*;
+import ua.goit.projectmanagementsystem.model.domain.Company;
+import ua.goit.projectmanagementsystem.model.domain.Developer;
 import ua.goit.projectmanagementsystem.model.domain.DeveloperProject;
 import ua.goit.projectmanagementsystem.model.domain.Project;
-import ua.goit.projectmanagementsystem.model.dto.CompanyDto;
-import ua.goit.projectmanagementsystem.model.dto.DeveloperDto;
-import ua.goit.projectmanagementsystem.repository.CompanyRepository;
-import ua.goit.projectmanagementsystem.repository.DeveloperProjectDAO;
-import ua.goit.projectmanagementsystem.repository.DeveloperRepository;
-import ua.goit.projectmanagementsystem.repository.ProjectRepository;
+import ua.goit.projectmanagementsystem.DAO.CompanyDAO;
+import ua.goit.projectmanagementsystem.DAO.DeveloperProjectDAO;
+import ua.goit.projectmanagementsystem.DAO.DeveloperDAO;
+import ua.goit.projectmanagementsystem.DAO.ProjectDAO;
+import ua.goit.projectmanagementsystem.model.dto.DeveloperWithCompanyDto;
 import ua.goit.projectmanagementsystem.service.*;
 
 import java.io.IOException;
@@ -39,30 +39,26 @@ public class DevelopersServlet extends HttpServlet {
         DatabaseManager dbConnector = new PostgresHikariProvider(util.getHostname(), util.getPort(),
                 util.getSchema(), util.getUser(), util.getPassword(), util.getJdbcDriver());
 
-        DeveloperRepository developerRepository = new DeveloperRepository(dbConnector);
-        CompanyRepository companyRepository = new CompanyRepository(dbConnector);
-        SkillConverter skillConverter = new SkillConverter();
-        CompanyConverter companyConverter = new CompanyConverter();
-        ProjectConverter projectConverter = new ProjectConverter();
-        DeveloperShortConverter developerShortConverter = new DeveloperShortConverter();
-        DeveloperConverter developerConverter = new DeveloperConverter(skillConverter, companyConverter);
-        DeveloperProjectConverter developerProjectConverter = new DeveloperProjectConverter(developerConverter, projectConverter);
+        DeveloperDAO developerDAO = new DeveloperDAO(dbConnector);
+        CompanyDAO companyDAO = new CompanyDAO(dbConnector);
+        ProjectDAO projectDAO = new ProjectDAO(dbConnector);
+        DeveloperProjectDAO developerProjectDAO = new DeveloperProjectDAO(dbConnector);
 
-        this.developerService = new DeveloperService(developerRepository, companyRepository, developerShortConverter, developerConverter, developerProjectConverter);
-        this.companyService = new CompanyService(companyRepository, companyConverter);
-        this.projectService = new ProjectService(new ProjectRepository(dbConnector), companyRepository, companyConverter);
-        this.developerProjectService = new DeveloperProjectService(new DeveloperProjectDAO(dbConnector));
+        this.developerService = new DeveloperService(developerDAO, companyDAO);
+        this.companyService = new CompanyService(companyDAO);
+        this.projectService = new ProjectService(projectDAO, companyDAO);
+        this.developerProjectService = new DeveloperProjectService(developerProjectDAO);
 
-        this.validator = new Validator();
+        this.validator = new Validator(companyDAO, developerDAO, projectDAO);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Integer developerId = null;
-        DeveloperDto developerDto = new DeveloperDto();
+        Developer developer = new Developer();
         if (!req.getParameter("developerId").isBlank()) {
             developerId = Integer.parseInt(req.getParameter("developerId"));
-            developerDto.setDeveloperId(developerId);
+            developer.setDeveloperId(developerId);
         }
 
         ErrorMessage errorMessage = validator.validateDeveloper(req);
@@ -83,19 +79,19 @@ public class DevelopersServlet extends HttpServlet {
         Integer companyId = Integer.parseInt(req.getParameter("companyId"));
         Integer salary = Integer.parseInt(req.getParameter("salary"));
 
-        CompanyDto companyDto = companyService.finbById(companyId);
+        //Company company = companyService.finbById(companyId);
 
-        developerDto.setFirstName(firstName);
-        developerDto.setLastName(lastName);
-        developerDto.setAge(age);
-        developerDto.setSex(sex);
-        developerDto.setCompany(companyDto);
-        developerDto.setSalary(salary);
+        developer.setFirstName(firstName);
+        developer.setLastName(lastName);
+        developer.setAge(age);
+        developer.setSex(sex);
+        developer.setCompanyId(companyId);
+        developer.setSalary(salary);
 
         if (Objects.isNull(developerId)) {
-            developerService.save(developerDto);
+            developerService.save(developer);
         } else {
-            developerService.update(developerDto);
+            developerService.update(developer);
         }
         resp.sendRedirect("/developers");
     }
@@ -105,12 +101,16 @@ public class DevelopersServlet extends HttpServlet {
         String requestURI = req.getRequestURI();
         String idStr = requestURI.replaceAll("/developers/?", "");
         String deleteId = req.getParameter("deleteId");
+        String developerId = req.getParameter("developerId");
+
         if (deleteId != null) {
-            DeveloperDto developerDto = developerService.findById(Integer.parseInt(deleteId));
-            developerService.delete(developerDto);
+            Developer developer = developerService.findById(Integer.parseInt(deleteId));
+            developerService.delete(developer);
             resp.sendRedirect("/developers");
         } else if ("new".equalsIgnoreCase(idStr)) {
             handleNew(req, resp);
+        } else if (developerId != null) {
+            handleId(Integer.parseInt(developerId), req, resp);
         } else if (!idStr.equals("")) {
             try {
                 Integer id = Integer.parseInt(idStr);
@@ -124,15 +124,15 @@ public class DevelopersServlet extends HttpServlet {
                 resp.sendRedirect("/developers");
             }
         } else {
-            List<DeveloperDto> developers = developerService.findAll();
+            List<DeveloperWithCompanyDto> developers = developerService.findAllWithCompany();
             req.setAttribute("developers", developers);
             req.getRequestDispatcher("/WEB-INF/jsp/developers.jsp").forward(req, resp);
         }
     }
 
     private void handleNew(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.setAttribute("developer", new DeveloperDto());
-        List<CompanyDto> companies = companyService.findAll();
+        req.setAttribute("developer", new Developer());
+        List<Company> companies = companyService.findAll();
         req.setAttribute("companies", companies);
         List<Project> projectsWithoutThisDeveloper = projectService.findAll();
         req.setAttribute("projectsWithoutThisDeveloper", projectsWithoutThisDeveloper);
@@ -141,9 +141,9 @@ public class DevelopersServlet extends HttpServlet {
 
     private void handleId(Integer id, HttpServletRequest req, HttpServletResponse resp) throws
             ServletException, IOException {
-        DeveloperDto developer = developerService.findById(id);
+        Developer developer = developerService.findById(id);
         req.setAttribute("developer", developer);
-        List<CompanyDto> companies = companyService.findAll();
+        List<Company> companies = companyService.findAll();
         req.setAttribute("companies", companies);
         List<Project> projects = projectService.findByDeveloperId(developer.getDeveloperId());
         req.setAttribute("projects", projects);

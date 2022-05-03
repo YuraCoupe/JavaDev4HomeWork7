@@ -9,7 +9,7 @@
     </head>
 
     <body>
-        <% ua.goit.projectmanagementsystem.model.dto.CompanyDto company = (ua.goit.projectmanagementsystem.model.dto.CompanyDto) request.getAttribute("company"); %>
+        <% ua.goit.projectmanagementsystem.model.domain.Company company = (ua.goit.projectmanagementsystem.model.domain.Company) request.getAttribute("company"); %>
 
         <c:import url="${contextPath}/WEB-INF/jsp/navibar.jsp"/>
         <div class="container">

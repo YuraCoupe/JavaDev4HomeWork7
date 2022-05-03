@@ -1,26 +1,28 @@
-package ua.goit.projectmanagementsystem.model.dao;
+package ua.goit.projectmanagementsystem.model.domain;
 
+import java.util.List;
 import java.util.Objects;
 
-public class CompanyDao {
+public class Company {
     private Integer companyId;
     private String companyName;
     private String companyLocation;
+    private List<Developer> developers;
 
-    public CompanyDao() {
+    public Company() {
     }
 
-    public CompanyDao(String companyName, String companyLocation) {
+    public Company(String companyName, String companyLocation) {
         this.companyName = companyName;
         this.companyLocation = companyLocation;
     }
 
-    public Integer getCompanyId() {
-        return companyId;
-    }
-
     public void setCompanyId(Integer companyId) {
         this.companyId = companyId;
+    }
+
+    public Integer getCompanyId() {
+        return companyId;
     }
 
     public String getCompanyName() {
@@ -39,9 +41,17 @@ public class CompanyDao {
         this.companyLocation = companyLocation;
     }
 
+    public List<Developer> getDevelopers() {
+        return developers;
+    }
+
+    public void setDevelopers(List<Developer> developers) {
+        this.developers = developers;
+    }
+
     @Override
     public String toString() {
-        return "CompanyDao{" +
+        return "CompanyDto{" +
                 "companyId=" + companyId +
                 ", companyName='" + companyName + '\'' +
                 ", companyLocation='" + companyLocation + '\'' +
@@ -52,7 +62,7 @@ public class CompanyDao {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        CompanyDao that = (CompanyDao) o;
+        Company that = (Company) o;
         return companyId.equals(that.companyId) && companyName.equals(that.companyName) && companyLocation.equals(that.companyLocation);
     }
 

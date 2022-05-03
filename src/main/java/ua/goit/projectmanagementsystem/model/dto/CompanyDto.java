@@ -1,5 +1,7 @@
 package ua.goit.projectmanagementsystem.model.dto;
 
+import ua.goit.projectmanagementsystem.model.domain.Developer;
+
 import java.util.List;
 import java.util.Objects;
 
@@ -7,7 +9,7 @@ public class CompanyDto {
     private Integer companyId;
     private String companyName;
     private String companyLocation;
-    private List<DeveloperDto> developers;
+    private List<Developer> developers;
 
     public CompanyDto() {
     }
@@ -41,11 +43,11 @@ public class CompanyDto {
         this.companyLocation = companyLocation;
     }
 
-    public List<DeveloperDto> getDevelopers() {
+    public List<Developer> getDevelopers() {
         return developers;
     }
 
-    public void setDevelopers(List<DeveloperDto> developers) {
+    public void setDevelopers(List<Developer> developers) {
         this.developers = developers;
     }
 

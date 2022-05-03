@@ -1,14 +1,14 @@
-package ua.goit.projectmanagementsystem.repository;
+package ua.goit.projectmanagementsystem.DAO;
 
 import ua.goit.projectmanagementsystem.config.DatabaseManager;
-import ua.goit.projectmanagementsystem.model.dao.CompanyDao;
+import ua.goit.projectmanagementsystem.model.domain.Company;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class CompanyRepository {
+public class CompanyDAO {
     private static final String INSERT = "INSERT INTO companies (company_name, company_location) VALUES (?, ?);";
     private static final String UPDATE = "UPDATE companies SET company_name = ?, company_location = ? WHERE company_id = ?;";
     private static final String FIND_BY_NAME = "SELECT * FROM companies WHERE companies.company_name = ?;";
@@ -19,27 +19,27 @@ public class CompanyRepository {
 
     private final DatabaseManager databaseManager;
 
-    public CompanyRepository(DatabaseManager databaseManager) {
+    public CompanyDAO(DatabaseManager databaseManager) {
         this.databaseManager = databaseManager;
     }
 
-    public Optional<CompanyDao> findByName(String name) {
+    public Optional<Company> findByName(String name) {
         try (Connection connection = databaseManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(FIND_BY_NAME)) {
             preparedStatement.setString(1, name);
             ResultSet resultSet = preparedStatement.executeQuery();
-            return mapToCompanyDao(resultSet);
+            return mapToCompany(resultSet);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
         return Optional.empty();
     }
 
-    public Integer save(CompanyDao companyDao) {
+    public Integer save(Company company) {
         try (Connection connection = databaseManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS)) {
-            preparedStatement.setString(1, companyDao.getCompanyName());
-            preparedStatement.setString(2, companyDao.getCompanyLocation());
+            preparedStatement.setString(1, company.getCompanyName());
+            preparedStatement.setString(2, company.getCompanyLocation());
             preparedStatement.execute();
             ResultSet resultSet = preparedStatement.getGeneratedKeys();
             resultSet.next();
@@ -51,79 +51,79 @@ public class CompanyRepository {
         return null;
     }
 
-    public void update(CompanyDao companyDao) {
+    public void update(Company company) {
         try (Connection connection = databaseManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(UPDATE)) {
-            preparedStatement.setString(1, companyDao.getCompanyName());
-            preparedStatement.setString(2, companyDao.getCompanyLocation());
-            preparedStatement.setInt(3, companyDao.getCompanyId());
+            preparedStatement.setString(1, company.getCompanyName());
+            preparedStatement.setString(2, company.getCompanyLocation());
+            preparedStatement.setInt(3, company.getCompanyId());
             preparedStatement.execute();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
     }
 
-    public void delete(CompanyDao companyDao) {
+    public void delete(Company company) {
         try (Connection connection = databaseManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(DELETE)) {
-            preparedStatement.setInt(1, companyDao.getCompanyId());
+            preparedStatement.setInt(1, company.getCompanyId());
             preparedStatement.execute();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
     }
 
-    private Optional<CompanyDao> mapToCompanyDao(ResultSet resultSet) throws SQLException {
-        CompanyDao companyDao = null;
+    private Optional<Company> mapToCompany(ResultSet resultSet) throws SQLException {
+        Company company = null;
         while (resultSet.next()) {
-            companyDao = new CompanyDao();
-            companyDao.setCompanyId(resultSet.getInt("company_id"));
-            companyDao.setCompanyName(resultSet.getString("company_name"));
-            companyDao.setCompanyLocation(resultSet.getString("company_location"));
+            company = new Company();
+            company.setCompanyId(resultSet.getInt("company_id"));
+            company.setCompanyName(resultSet.getString("company_name"));
+            company.setCompanyLocation(resultSet.getString("company_location"));
         }
-        return Optional.ofNullable(companyDao);
+        return Optional.ofNullable(company);
     }
 
-    private List<CompanyDao> mapToCompanyDaos(ResultSet resultSet) throws SQLException {
-        List<CompanyDao> companyDaos = new ArrayList<>();
+    private List<Company> mapToCompanys(ResultSet resultSet) throws SQLException {
+        List<Company> companys = new ArrayList<>();
         while (resultSet.next()) {
-            CompanyDao companyDao = new CompanyDao();
-            companyDao.setCompanyId(resultSet.getInt("company_id"));
-            companyDao.setCompanyName(resultSet.getString("company_name"));
-            companyDao.setCompanyLocation(resultSet.getString("company_location"));
-            companyDaos.add(companyDao);
+            Company company = new Company();
+            company.setCompanyId(resultSet.getInt("company_id"));
+            company.setCompanyName(resultSet.getString("company_name"));
+            company.setCompanyLocation(resultSet.getString("company_location"));
+            companys.add(company);
         }
-        return companyDaos;
+        return companys;
     }
 
-    public List<CompanyDao> findAll() {
+    public List<Company> findAll() {
         try (Connection connection = databaseManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(FIND_ALL)) {
             ResultSet resultSet = preparedStatement.executeQuery();
-            return mapToCompanyDaos(resultSet);
+            return mapToCompanys(resultSet);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
         return new ArrayList<>();
     }
 
-    public Optional<CompanyDao> findById(Integer id) {
+    public Optional<Company> findById(Integer id) {
         try (Connection connection = databaseManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(FIND_BY_ID)) {
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
-            return mapToCompanyDao(resultSet);
+            return mapToCompany(resultSet);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
         return Optional.empty();
     }
 
-    public List<CompanyDao> findAllExUnemployed() {
+    public List<Company> findAllExUnemployed() {
         try (Connection connection = databaseManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(FIND_ALL_EX_UNEMPLOYED)) {
             ResultSet resultSet = preparedStatement.executeQuery();
-            return mapToCompanyDaos(resultSet);
+            return mapToCompanys(resultSet);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }

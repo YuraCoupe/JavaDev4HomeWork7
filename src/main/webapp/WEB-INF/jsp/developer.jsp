@@ -9,7 +9,7 @@
     </head>
 
     <body>
-        <% ua.goit.projectmanagementsystem.model.dto.DeveloperDto developer = (ua.goit.projectmanagementsystem.model.dto.DeveloperDto) request.getAttribute("developer"); %>
+        <% ua.goit.projectmanagementsystem.model.domain.Developer developer = (ua.goit.projectmanagementsystem.model.domain.Developer) request.getAttribute("developer"); %>
 
         <c:import url="${contextPath}/WEB-INF/jsp/navibar.jsp"/>
         <div class="container">
@@ -39,7 +39,7 @@
                         <label for="company">Company:</label><br>
                         <select class="form-control" id="companyId" name="companyId">
                             <c:forEach items="${companies}" var="company">
-                                <option value="${company.companyId}" ${company.companyId == developer.company.companyId ? 'selected="selected"' : ''}>
+                                <option value="${company.companyId}" ${company.companyId == developer.companyId ? 'selected="selected"' : ''}>
                                     <c:out value="${company.companyName}"/>
                                 </option>
                             </c:forEach>

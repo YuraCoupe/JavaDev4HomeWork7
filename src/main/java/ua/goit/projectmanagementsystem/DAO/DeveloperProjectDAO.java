@@ -1,4 +1,4 @@
-package ua.goit.projectmanagementsystem.repository;
+package ua.goit.projectmanagementsystem.DAO;
 
 import ua.goit.projectmanagementsystem.config.DatabaseManager;
 import ua.goit.projectmanagementsystem.model.domain.DeveloperProject;

@@ -1,13 +1,13 @@
-package ua.goit.projectmanagementsystem.model.dto;
+package ua.goit.projectmanagementsystem.model.domain;
 
 import java.util.Objects;
 
-public class SkillDto {
+public class Skill {
     private Integer skillId;
     private String specialization;
     private String level;
 
-    public SkillDto() {
+    public Skill() {
     }
 
     public Integer getSkillId() {
@@ -47,8 +47,8 @@ public class SkillDto {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        SkillDto skillDao = (SkillDto) o;
-        return skillId.equals(skillDao.skillId) && specialization.equals(skillDao.specialization) && level.equals(skillDao.level);
+        Skill skill = (Skill) o;
+        return skillId.equals(skill.skillId) && specialization.equals(skill.specialization) && level.equals(skill.level);
     }
 
     @Override
