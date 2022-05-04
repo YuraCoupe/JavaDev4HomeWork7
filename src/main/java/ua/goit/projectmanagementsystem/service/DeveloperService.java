@@ -7,9 +7,7 @@ import ua.goit.projectmanagementsystem.model.domain.Company;
 import ua.goit.projectmanagementsystem.model.domain.Developer;
 import ua.goit.projectmanagementsystem.DAO.CompanyDAO;
 import ua.goit.projectmanagementsystem.DAO.DeveloperDAO;
-import ua.goit.projectmanagementsystem.model.domain.Project;
 import ua.goit.projectmanagementsystem.model.dto.DeveloperWithCompanyDto;
-import ua.goit.projectmanagementsystem.model.dto.ProjectWithCompanyDto;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,10 +27,6 @@ public class DeveloperService {
         Company company = companyDAO.findById(developer.getCompanyId()).orElseThrow(()
                 -> new CompanyNotFoundException(String.format("Company does not exist")));
         return developer;
-    }
-
-    public boolean isDeveloperExist(String firstName, String lastName) {
-        return developerDAO.findByName(firstName, lastName).isPresent();
     }
 
     public void save(Developer developer) {
@@ -102,13 +96,3 @@ public class DeveloperService {
         return developerWithCompanyDtos;
     }
 }
-
-/*
-return developerDAO.findAllUnemployed()
-                .stream()
-                .map(developerDao -> {CompanyDao companyDao = companyDAO.findById(developerDao.getCompanyId()).orElseThrow(()
-                        -> new CompanyNotFoundException(String.format("Company does not exist")));
-                    return developerConverter.daoToDto(developerDao, companyDao);
-                })
-                .collect(Collectors.toList());
- */

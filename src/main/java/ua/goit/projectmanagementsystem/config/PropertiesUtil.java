@@ -9,10 +9,6 @@ import java.util.Properties;
 public class PropertiesUtil {
     private Properties properties = null;
 
-    public PropertiesUtil() {
-        load();
-    }
-
     public PropertiesUtil(ServletContext context) {
         loadWithContext(context);
     }

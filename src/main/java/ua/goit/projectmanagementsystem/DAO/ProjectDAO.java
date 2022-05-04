@@ -57,18 +57,6 @@ public class ProjectDAO {
         this.databaseManager = databaseManager;
     }
 
-    public Optional<Integer> getSalarySum(Integer projectId) {
-        try (Connection connection = databaseManager.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(GET_SALARY_SUM_BY_PROJECT_ID)) {
-            preparedStatement.setInt(1, projectId);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            resultSet.next();
-            return Optional.ofNullable(resultSet.getInt("project_value"));
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-        return Optional.empty();
-    }
-
     public Optional<Set<Developer>> findDevsByProjectId(Integer projectId) {
         SkillDAO skillRepository = new SkillDAO(databaseManager);
         try (Connection connection = databaseManager.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(FIND_DEVELOPERS_BY_PROJECT_ID)) {
@@ -90,26 +78,6 @@ public class ProjectDAO {
                 developers.add(developer);
             }
             return Optional.ofNullable(developers);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-        return Optional.empty();
-    }
-
-    public Optional<HashMap<Project, Integer>> findAllProjectsWithDevelopersNumber () {
-        try (Connection connection = databaseManager.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(FIND_ALL_JOIN)) {
-            ResultSet resultSet = preparedStatement.executeQuery();
-            HashMap<Project, Integer> projects = new HashMap<>();
-            while (resultSet.next()) {
-                Project project = new Project();
-                project.setProjectId(resultSet.getInt("project_id"));
-                project.setProjectName(resultSet.getString("project_name"));
-                project.setCompanyId(resultSet.getInt("company_id"));
-                project.setCustomerId(resultSet.getInt("customer_id"));
-                project.setProjectCost(resultSet.getInt("project_cost"));
-                projects.put(project, resultSet.getInt("developers_number"));
-            }
-            return Optional.ofNullable(projects);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }

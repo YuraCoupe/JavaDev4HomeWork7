@@ -19,10 +19,6 @@ public class CompanyService {
                 -> new CompanyNotFoundException(String.format("Company %s does not exist", name)));
     }
 
-    public boolean isCompanyExist(String name) {
-        return companyDAO.findByName(name).isPresent();
-    }
-
     public Integer save(Company company) {
         Integer id = null;
         if (companyDAO.findByName(company.getCompanyName()).isEmpty()) {
@@ -53,7 +49,7 @@ public class CompanyService {
         return companyDAO.findAllExUnemployed();
     }
 
-    public Company finbById(Integer id) {
+    public Company findById(Integer id) {
         return companyDAO.findById(id).orElseThrow(()
                 -> new CompanyNotFoundException(String.format("Company %d does not exist", id)));
     }

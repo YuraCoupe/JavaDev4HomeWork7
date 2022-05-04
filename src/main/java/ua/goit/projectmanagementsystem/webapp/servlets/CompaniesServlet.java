@@ -14,7 +14,6 @@ import ua.goit.projectmanagementsystem.config.PropertiesUtil;
 import ua.goit.projectmanagementsystem.model.ErrorMessage;
 import ua.goit.projectmanagementsystem.model.domain.Company;
 import ua.goit.projectmanagementsystem.model.domain.Developer;
-import ua.goit.projectmanagementsystem.model.dto.CompanyDto;
 import ua.goit.projectmanagementsystem.DAO.CompanyDAO;
 import ua.goit.projectmanagementsystem.service.CompanyService;
 import ua.goit.projectmanagementsystem.service.DeveloperService;
@@ -84,7 +83,6 @@ public class CompaniesServlet extends HttpServlet {
         if (Objects.nonNull(req.getParameter("developerId"))) {
             developerId = Integer.parseInt(req.getParameter("developerId"));
             developer = developerService.findById(developerId);
-            //companyDto = companyService.finbById(companyId);
             developer.setCompanyId(companyId);
             developerService.update(developer);
         }
@@ -98,7 +96,7 @@ public class CompaniesServlet extends HttpServlet {
         String deleteId = req.getParameter("deleteId");
         String companyId = req.getParameter("companyId");
         if (deleteId != null) {
-            Company company = companyService.finbById(Integer.parseInt(deleteId));
+            Company company = companyService.findById(Integer.parseInt(deleteId));
             companyService.delete(company);
             resp.sendRedirect("/companies");
         } else if ("new".equalsIgnoreCase(idStr)) {
@@ -128,15 +126,13 @@ public class CompaniesServlet extends HttpServlet {
 
     private void handleNew(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setAttribute("company", new Company());
-        //List<CompanyDto> all = service.findAll();
-        //req.setAttribute("companies", all);
         List<Developer> unemployedDevelopers = developerService.findAllUnemployed();
         req.setAttribute("unemployedDevelopers", unemployedDevelopers);
         req.getRequestDispatcher("/WEB-INF/jsp/company.jsp").forward(req, resp);
     }
 
     private void handleId(Integer id, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Company company = companyService.finbById(id);
+        Company company = companyService.findById(id);
         req.setAttribute("company", company);
         List<Developer> developers = developerService.findByCompanyId(company.getCompanyId());
         req.setAttribute("developers", developers);

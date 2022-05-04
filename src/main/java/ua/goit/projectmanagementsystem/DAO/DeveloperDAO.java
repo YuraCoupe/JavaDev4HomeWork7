@@ -33,20 +33,6 @@ public class DeveloperDAO {
                     "JOIN companies c ON d.company_id = c.company_id\n" +
                     "WHERE c.company_name = 'Unemployed';";
 
-    private final static String FIND_JAVA_DEVELOPERS =
-            "SELECT d.developer_id, d.first_name, d.last_name, d.age, d.sex, d.company_id, d.salary\n" +
-                    "FROM developers d\n" +
-                    "JOIN developerstoskills dts ON dts.developer_id = d.developer_id\n" +
-                    "JOIN skills s ON dts.skill_id = s.skill_id\n" +
-                    "WHERE s.specialization = ?";
-
-    private final static String FIND_MIDDLE_DEVELOPERS =
-            "SELECT d.developer_id, d.first_name, d.last_name, d.age, d.sex, d.company_id, d.salary\n" +
-                    "FROM developers d\n" +
-                    "JOIN developerstoskills dts ON dts.developer_id = d.developer_id\n" +
-                    "JOIN skills s ON dts.skill_id = s.skill_id\n" +
-                    "WHERE s.level = ?";
-
     private final DatabaseManager databaseManager;
 
     public DeveloperDAO(DatabaseManager databaseManager) {
@@ -64,26 +50,6 @@ public class DeveloperDAO {
             throwables.printStackTrace();
         }
         return Optional.empty();
-    }
-
-    private Set<Developer> resultsetToDeveloper(SkillDAO skillRepository, ResultSet resultSet) throws SQLException {
-        Set<Developer> developers = new HashSet<>();
-        while (resultSet.next()) {
-            Developer developer = new Developer();
-            developer.setDeveloperId(resultSet.getInt("developer_id"));
-            developer.setFirstName(resultSet.getString("first_name"));
-            developer.setLastName(resultSet.getString("last_name"));
-            developer.setAge(Integer.parseInt(resultSet.getString("age")));
-            developer.setSex(resultSet.getString("sex"));
-            developer.setCompanyId(Integer.parseInt(resultSet.getString("company_id")));
-            developer.setSalary(Integer.parseInt(resultSet.getString("salary")));
-            Set<Skill> skills = skillRepository.getSkillsByDeveloperId(developer.getDeveloperId()).orElseThrow(()
-                    -> new DeveloperNotFoundException(String.format("Developer with ID %d does not exist", developer.getDeveloperId())));
-            ;
-            developer.setSkills(skills);
-            developers.add(developer);
-        }
-        return developers;
     }
 
     public void save(Developer developer) {

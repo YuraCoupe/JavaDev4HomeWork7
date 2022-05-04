@@ -134,8 +134,6 @@ public class ProjectsServlet extends HttpServlet {
 
     private void handleNew(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setAttribute("project", new Project());
-        //List<CompanyDto> all = service.findAll();
-        //req.setAttribute("companies", all);
         List<Company> companies = companyService.findAllExUnemployed();
         req.setAttribute("companies", companies);
         List<Developer> developersWithoutThisProject = developerService.findAll();

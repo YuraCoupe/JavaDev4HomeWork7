@@ -3,7 +3,6 @@ package ua.goit.projectmanagementsystem.service;
 import jakarta.servlet.http.HttpServletRequest;
 import ua.goit.projectmanagementsystem.DAO.CompanyDAO;
 import ua.goit.projectmanagementsystem.DAO.DeveloperDAO;
-import ua.goit.projectmanagementsystem.DAO.DeveloperProjectDAO;
 import ua.goit.projectmanagementsystem.DAO.ProjectDAO;
 import ua.goit.projectmanagementsystem.model.ErrorMessage;
 

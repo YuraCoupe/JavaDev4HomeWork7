@@ -78,9 +78,6 @@ public class DevelopersServlet extends HttpServlet {
         String sex = req.getParameter("sex");
         Integer companyId = Integer.parseInt(req.getParameter("companyId"));
         Integer salary = Integer.parseInt(req.getParameter("salary"));
-
-        //Company company = companyService.finbById(companyId);
-
         developer.setFirstName(firstName);
         developer.setLastName(lastName);
         developer.setAge(age);
