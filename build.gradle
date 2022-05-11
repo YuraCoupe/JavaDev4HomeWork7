@@ -17,7 +17,7 @@ dependencies {
     compileOnly 'jakarta.servlet:jakarta.servlet-api:5.0.0'
     implementation 'org.glassfish.web:jakarta.servlet.jsp.jstl:2.0.0'
     implementation 'com.google.code.gson:gson:2.7'
-
+    implementation 'org.hibernate:hibernate-core:6.0.0.Final'
 }
 
 test {

@@ -28,6 +28,13 @@
                    <a href="/companies/new" type="button" class="btn btn-primary">New</a>
                 </div>
             </div>
+            <div>
+                <c:if test="${not empty errorMessage}">
+                    <c:forEach items="${errorMessage.errors}" var="error">
+                        <p style="color:red">${error}</p>
+                    </c:forEach>
+                </c:if>
+            </div>
 
             <table class="table table-hover">
                 <thead>

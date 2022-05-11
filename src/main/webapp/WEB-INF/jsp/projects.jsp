@@ -48,7 +48,7 @@
                             <c:out value="${project.customerId}"/>
                         </td>
                         <td>
-                            <c:out value="${project.companyDto.companyName}"/>
+                            <c:out value="${project.company.companyName}"/>
                         </td>
                         <td>
                             <c:out value="${project.projectCost}"/>

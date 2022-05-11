@@ -13,16 +13,12 @@ import ua.goit.projectmanagementsystem.model.domain.Company;
 import ua.goit.projectmanagementsystem.model.domain.Developer;
 import ua.goit.projectmanagementsystem.model.domain.DeveloperProject;
 import ua.goit.projectmanagementsystem.model.domain.Project;
-import ua.goit.projectmanagementsystem.DAO.CompanyDAO;
-import ua.goit.projectmanagementsystem.DAO.DeveloperProjectDAO;
-import ua.goit.projectmanagementsystem.DAO.DeveloperDAO;
-import ua.goit.projectmanagementsystem.DAO.ProjectDAO;
-import ua.goit.projectmanagementsystem.model.dto.DeveloperWithCompanyDto;
 import ua.goit.projectmanagementsystem.service.*;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @WebServlet(urlPatterns = "/developers/*")
 public class DevelopersServlet extends HttpServlet {
@@ -34,22 +30,12 @@ public class DevelopersServlet extends HttpServlet {
 
     @Override
     public void init() {
-        PropertiesUtil util = new PropertiesUtil(getServletContext());
 
-        DatabaseManager dbConnector = new PostgresHikariProvider(util.getHostname(), util.getPort(),
-                util.getSchema(), util.getUser(), util.getPassword(), util.getJdbcDriver());
-
-        DeveloperDAO developerDAO = new DeveloperDAO(dbConnector);
-        CompanyDAO companyDAO = new CompanyDAO(dbConnector);
-        ProjectDAO projectDAO = new ProjectDAO(dbConnector);
-        DeveloperProjectDAO developerProjectDAO = new DeveloperProjectDAO(dbConnector);
-
-        this.developerService = new DeveloperService(developerDAO, companyDAO);
-        this.companyService = new CompanyService(companyDAO);
-        this.projectService = new ProjectService(projectDAO, companyDAO);
-        this.developerProjectService = new DeveloperProjectService(developerProjectDAO);
-
-        this.validator = new Validator(companyDAO, developerDAO, projectDAO);
+        this.developerService = (DeveloperService) getServletContext().getAttribute("developerService");
+        this.companyService = (CompanyService) getServletContext().getAttribute("companyService");
+        this.projectService = (ProjectService) getServletContext().getAttribute("projectService");
+        this.developerProjectService = (DeveloperProjectService) getServletContext().getAttribute("developerProjectService");
+        this.validator = (Validator) getServletContext().getAttribute("validator");
     }
 
     @Override
@@ -82,7 +68,8 @@ public class DevelopersServlet extends HttpServlet {
         developer.setLastName(lastName);
         developer.setAge(age);
         developer.setSex(sex);
-        developer.setCompanyId(companyId);
+        Company company = companyService.findById(companyId);
+        developer.setCompany(company);
         developer.setSalary(salary);
 
         if (Objects.isNull(developerId)) {
@@ -121,7 +108,7 @@ public class DevelopersServlet extends HttpServlet {
                 resp.sendRedirect("/developers");
             }
         } else {
-            List<DeveloperWithCompanyDto> developers = developerService.findAllWithCompany();
+            List<Developer> developers = developerService.findAll();
             req.setAttribute("developers", developers);
             req.getRequestDispatcher("/WEB-INF/jsp/developers.jsp").forward(req, resp);
         }
@@ -142,7 +129,7 @@ public class DevelopersServlet extends HttpServlet {
         req.setAttribute("developer", developer);
         List<Company> companies = companyService.findAll();
         req.setAttribute("companies", companies);
-        List<Project> projects = projectService.findByDeveloperId(developer.getDeveloperId());
+        Set<Project> projects = developer.getProjects();
         req.setAttribute("projects", projects);
         List<Project> projectsWithoutThisDeveloper = projectService.findWithoutThisDeveloperId(id);
         req.setAttribute("projectsWithoutThisDeveloper", projectsWithoutThisDeveloper);

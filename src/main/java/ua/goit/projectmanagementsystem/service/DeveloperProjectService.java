@@ -1,19 +1,28 @@
 package ua.goit.projectmanagementsystem.service;
 
+import ua.goit.projectmanagementsystem.Dao.CompanyDao;
 import ua.goit.projectmanagementsystem.exception.CompanyNotFoundException;
 import ua.goit.projectmanagementsystem.model.domain.DeveloperProject;
-import ua.goit.projectmanagementsystem.DAO.DeveloperProjectDAO;
+import ua.goit.projectmanagementsystem.Dao.DeveloperProjectDao;
 
 
 public class DeveloperProjectService {
-    private final DeveloperProjectDAO developerProjectDAO;
+    private static DeveloperProjectService instance;
 
-    public DeveloperProjectService(DeveloperProjectDAO developerProjectDAO) {
-        this.developerProjectDAO = developerProjectDAO;
+    private static final DeveloperProjectDao developerProjectDAO = DeveloperProjectDao.getInstance();
+
+    public DeveloperProjectService() {
     }
 
-    public Integer save(Integer developerId, Integer projectId) {
-        return developerProjectDAO.save(developerId, projectId);
+    public static DeveloperProjectService getInstance() {
+        if (instance == null) {
+            instance = new DeveloperProjectService();
+        }
+        return instance;
+    }
+
+    public Integer save(DeveloperProject developerProject) {
+        return developerProjectDAO.create(developerProject).getId();
     }
 
     public DeveloperProject findByIds(Integer developerId, Integer projectId) {

@@ -3,15 +3,24 @@ package ua.goit.projectmanagementsystem.service;
 import ua.goit.projectmanagementsystem.exception.CompanyAlreadyExistException;
 import ua.goit.projectmanagementsystem.exception.CompanyNotFoundException;
 import ua.goit.projectmanagementsystem.model.domain.Company;
-import ua.goit.projectmanagementsystem.DAO.CompanyDAO;
+import ua.goit.projectmanagementsystem.Dao.CompanyDao;
 
 import java.util.List;
 
 public class CompanyService {
-    private final CompanyDAO companyDAO;
 
-    public CompanyService(CompanyDAO companyDAO) {
-        this.companyDAO = companyDAO;
+    private static CompanyService instance;
+
+    private static final CompanyDao companyDAO = CompanyDao.getInstance();
+
+    public CompanyService() {
+    }
+
+    public static CompanyService getInstance() {
+        if (instance == null) {
+            instance = new CompanyService();
+        }
+        return instance;
     }
 
     public Company findByName(String name) {
@@ -22,7 +31,7 @@ public class CompanyService {
     public Integer save(Company company) {
         Integer id = null;
         if (companyDAO.findByName(company.getCompanyName()).isEmpty()) {
-            id = companyDAO.save(company);
+            id = companyDAO.create(company).getCompanyId();
         } else {
             throw new CompanyAlreadyExistException("This company already exists");
         }

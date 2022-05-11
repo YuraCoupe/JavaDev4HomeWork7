@@ -55,7 +55,7 @@
             </c:if>
         </form>
 
-        <c:if test = "${fn:length(developers) > 0}">
+        <c:if test = "${fn:length(company.developers) > 0}">
             <table class="table table-hover">
                 <thead>
                     <tr>
@@ -65,7 +65,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                <c:forEach items="${developers}" var="developer">
+                <c:forEach items="${company.developers}" var="developer">
                     <tr>
                         <td>
                             <c:out value="${developer.firstName}"/>

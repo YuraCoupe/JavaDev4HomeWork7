@@ -1,24 +1,31 @@
 package ua.goit.projectmanagementsystem.service;
 
+import com.oracle.wls.shaded.org.apache.xalan.xsltc.runtime.ErrorMessages_es;
 import jakarta.servlet.http.HttpServletRequest;
-import ua.goit.projectmanagementsystem.DAO.CompanyDAO;
-import ua.goit.projectmanagementsystem.DAO.DeveloperDAO;
-import ua.goit.projectmanagementsystem.DAO.ProjectDAO;
+import ua.goit.projectmanagementsystem.Dao.CompanyDao;
+import ua.goit.projectmanagementsystem.Dao.DeveloperDao;
+import ua.goit.projectmanagementsystem.Dao.ProjectDao;
 import ua.goit.projectmanagementsystem.model.ErrorMessage;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Validator {
+    private static Validator instance;
 
-    private final CompanyDAO companyDAO;
-    private final DeveloperDAO developerDAO;
-    private final ProjectDAO projectDAO;
+    private static final CompanyDao companyDAO = CompanyDao.getInstance();
+    private static final DeveloperDao developerDAO = DeveloperDao.getInstance();
+    private static final ProjectDao projectDAO = ProjectDao.getInstance();
 
-    public Validator(CompanyDAO companyDAO, DeveloperDAO developerDAO, ProjectDAO projectDAO) {
-        this.companyDAO = companyDAO;
-        this.developerDAO = developerDAO;
-        this.projectDAO = projectDAO;
+    public Validator() {
+    }
+
+    public static Validator getInstance() {
+        if (instance == null) {
+            instance = new Validator();
+        }
+        return instance;
     }
 
     public ErrorMessage validateCompany(HttpServletRequest req) {
@@ -43,6 +50,17 @@ public class Validator {
         return errorMessage;
     }
 
+    public ErrorMessage validateCompanyToDelete(HttpServletRequest req) {
+        ErrorMessage errorMessage = new ErrorMessage();
+        List<String> errors = new ArrayList<>();
+        String companyIdString = req.getParameter("deleteId");
+        if (!companyDAO.findById(Integer.parseInt(companyIdString)).get().getProjects().isEmpty()) {
+            errors.add("Company has projects. Delete projects before removing the company");
+        }
+        errorMessage.setErrors(errors);
+        return errorMessage;
+    }
+
     public ErrorMessage validateDeveloper(HttpServletRequest req) {
         ErrorMessage errorMessage = new ErrorMessage();
         List<String> errors = new ArrayList<>();
@@ -57,7 +75,7 @@ public class Validator {
             errors.add("Last name can not be empty");
         }
 
-        if (developerDAO.findByName(firstName, lastName).isPresent()) {
+        if (developerDAO.findByName(firstName, lastName).isPresent() & req.getParameter("developerId").isBlank()) {
             errors.add(String.format("Developer with name %s %s already exists", firstName, lastName));
         }
 

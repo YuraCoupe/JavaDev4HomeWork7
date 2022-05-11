@@ -1,0 +1,29 @@
+<persistence xmlns="https://jakarta.ee/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             version="3.0"
+             xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd">
+
+<persistence-unit name="JavaDev4HomeWork7">
+
+    <class>ua.goit.projectmanagementsystem.model.domain.DeveloperProject</class>
+    <class>ua.goit.projectmanagementsystem.model.domain.Developer</class>
+    <class>ua.goit.projectmanagementsystem.model.domain.Project</class>
+    <class>ua.goit.projectmanagementsystem.model.domain.Company</class>
+
+        <exclude-unlisted-classes>true</exclude-unlisted-classes>
+        <properties>
+            <property name="hibernate.archive.autodetection" value="class, hbm" />
+            <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
+            <property name="hibernate.hbm2ddl.auto" value="none"/>
+            <property name="jakarta.persistence.jdbc.driver" value="org.postgresql.Driver"/>
+            <property name="jakarta.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/ITDatabase"/>
+            <property name="jakarta.persistence.jdbc.user" value="postgres"/>
+            <property name="jakarta.persistence.jdbc.password" value="12345"/>
+            <property name="hibernate.connection.autocommit" value="true" />
+
+            <property name="hibernate.show_sql" value="true"/>
+
+        </properties>
+
+    </persistence-unit>
+</persistence>

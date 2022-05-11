@@ -1,4 +1,4 @@
-package ua.goit.projectmanagementsystem.DAO;
+package ua.goit.projectmanagementsystem.Dao;
 
 import ua.goit.projectmanagementsystem.config.DatabaseManager;
 import ua.goit.projectmanagementsystem.model.domain.Skill;
@@ -11,7 +11,7 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
-public class SkillDAO {
+public class SkillDao extends AbstractDao<Skill>{
     private static final String GET_SKILLS_BY_DEVELOPER_ID =
             "SELECT dts.developer_id, s.skill_id, s.specialization, s.level\n" +
                     "FROM developerstoskills dts\n" +
@@ -20,7 +20,7 @@ public class SkillDAO {
 
     private final DatabaseManager databaseManager;
 
-    public SkillDAO(DatabaseManager databaseManager) {
+    public SkillDao(DatabaseManager databaseManager) {
         this.databaseManager = databaseManager;
     }
 

@@ -1,56 +1,39 @@
 package ua.goit.projectmanagementsystem.webapp.servlets;
 
-import com.google.gson.Gson;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import ua.goit.projectmanagementsystem.DAO.DeveloperDAO;
-import ua.goit.projectmanagementsystem.config.DatabaseManager;
-import ua.goit.projectmanagementsystem.config.PostgresHikariProvider;
-import ua.goit.projectmanagementsystem.config.PropertiesUtil;
 import ua.goit.projectmanagementsystem.model.ErrorMessage;
 import ua.goit.projectmanagementsystem.model.domain.Company;
 import ua.goit.projectmanagementsystem.model.domain.Developer;
 import ua.goit.projectmanagementsystem.model.domain.DeveloperProject;
 import ua.goit.projectmanagementsystem.model.domain.Project;
-import ua.goit.projectmanagementsystem.model.dto.ProjectWithCompanyDto;
-import ua.goit.projectmanagementsystem.DAO.CompanyDAO;
-import ua.goit.projectmanagementsystem.DAO.DeveloperProjectDAO;
-import ua.goit.projectmanagementsystem.DAO.ProjectDAO;
 import ua.goit.projectmanagementsystem.service.*;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @WebServlet(urlPatterns = "/projects/*")
 public class ProjectsServlet extends HttpServlet {
+
     private ProjectService projectService;
+    private CompanyService companyService;
     private DeveloperService developerService;
     private DeveloperProjectService developerProjectService;
-    private CompanyService companyService;
-    private static Gson jsonParser = new Gson();
     private Validator validator;
 
 
     @Override
     public void init() {
-        PropertiesUtil util = new PropertiesUtil(getServletContext());
-
-        DatabaseManager dbConnector = new PostgresHikariProvider(util.getHostname(), util.getPort(),
-                util.getSchema(), util.getUser(), util.getPassword(), util.getJdbcDriver());
-
-        CompanyDAO companyDAO = new CompanyDAO(dbConnector);
-        DeveloperDAO developerDAO = new DeveloperDAO(dbConnector);
-        ProjectDAO projectDAO = new ProjectDAO(dbConnector);
-        DeveloperProjectDAO developerProjectDAO = new DeveloperProjectDAO(dbConnector);
-        this.projectService = new ProjectService(projectDAO, companyDAO);
-        this.companyService = new CompanyService(companyDAO);
-        this.developerService = new DeveloperService(developerDAO, companyDAO);
-        this.developerProjectService = new DeveloperProjectService(developerProjectDAO);
-        validator = new Validator(companyDAO, developerDAO, projectDAO);
+        this.projectService = (ProjectService) getServletContext().getAttribute("projectService");
+        this.companyService = (CompanyService) getServletContext().getAttribute("companyService");
+        this.developerService = (DeveloperService) getServletContext().getAttribute("developerService");
+        this.developerProjectService = (DeveloperProjectService) getServletContext().getAttribute("developerProjectService");
+        validator = (Validator) getServletContext().getAttribute("validator");
     }
 
     @Override
@@ -82,7 +65,8 @@ public class ProjectsServlet extends HttpServlet {
 
         project.setProjectName(projectName);
         project.setCustomerId(Integer.parseInt(customerId));
-        project.setCompanyId(Integer.parseInt(companyId));
+        Company company = companyService.findById(Integer.parseInt(companyId));
+        project.setCompany(company);
         project.setProjectCost(Integer.parseInt(projectCost));
 
         if (Objects.isNull(projectId)) {
@@ -94,7 +78,10 @@ public class ProjectsServlet extends HttpServlet {
         Integer developerId;
         if (Objects.nonNull(req.getParameter("developerId"))) {
             developerId = Integer.parseInt(req.getParameter("developerId"));
-            developerProjectService.save(developerId, projectId);
+            DeveloperProject developerProject = new DeveloperProject();
+            developerProject.setDeveloperId(developerId);
+            developerProject.setProjectId(projectId);
+            developerProjectService.save(developerProject);
         }
         resp.sendRedirect("/projects");
     }
@@ -126,7 +113,7 @@ public class ProjectsServlet extends HttpServlet {
                 resp.sendRedirect("/projects");
             }
         } else {
-            List<ProjectWithCompanyDto> projects = projectService.findAllWithCompany();
+            List<Project> projects = projectService.findAll();
             req.setAttribute("projects", projects);
             req.getRequestDispatcher("/WEB-INF/jsp/projects.jsp").forward(req, resp);
         }
@@ -148,7 +135,7 @@ public class ProjectsServlet extends HttpServlet {
         List<Company> companies = companyService.findAllExUnemployed();
         req.setAttribute("companies", companies);
 
-        List<Developer> developers = developerService.findByProjectId(project.getProjectId());
+        Set<Developer> developers = project.getDevelopers();
         req.setAttribute("developers", developers);
 
         List<Developer> developersWithoutThisProject = developerService.findWithoutThisProjectId(project.getProjectId());

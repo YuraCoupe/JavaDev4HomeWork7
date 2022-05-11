@@ -1,24 +1,26 @@
 package ua.goit.projectmanagementsystem.model.domain;
 
+import jakarta.persistence.*;
+
+import java.util.Set;
+
+@Entity
+@Table(name = "projects")
 public class Project {
     private Integer projectId;
     private String projectName;
     private Integer customerId;
-    private Integer companyId;
     private Integer projectCost;
-
-    public Project(Integer projectId, String projectName, Integer customerId, Integer companyId, Integer projectCost) {
-        this.projectId = projectId;
-        this.projectName = projectName;
-        this.customerId = customerId;
-        this.companyId = companyId;
-        this.projectCost = projectCost;
-    }
+    private Set<Developer> developers;
+    private Company company;
 
     public Project() {
-
     }
 
+    @Id
+    @Column(name = "project_id")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "project_id_generator")
+    @SequenceGenerator(name = "project_id_generator", sequenceName = "projects_project_id_seq", allocationSize = 1)
     public Integer getProjectId() {
         return projectId;
     }
@@ -27,6 +29,7 @@ public class Project {
         this.projectId = projectId;
     }
 
+    @Column(name = "project_name")
     public String getProjectName() {
         return projectName;
     }
@@ -35,6 +38,7 @@ public class Project {
         this.projectName = projectName;
     }
 
+    @Column(name = "customer_id")
     public Integer getCustomerId() {
         return customerId;
     }
@@ -43,19 +47,31 @@ public class Project {
         this.customerId = customerId;
     }
 
-    public Integer getCompanyId() {
-        return companyId;
-    }
-
-    public void setCompanyId(Integer companyId) {
-        this.companyId = companyId;
-    }
-
+    @Column(name = "project_cost")
     public Integer getProjectCost() {
         return projectCost;
     }
 
     public void setProjectCost(Integer projectCost) {
         this.projectCost = projectCost;
+    }
+
+    @ManyToMany(mappedBy = "projects")
+    public Set<Developer> getDevelopers() {
+        return developers;
+    }
+
+    public void setDevelopers(Set<Developer> developers) {
+        this.developers = developers;
+    }
+
+    @ManyToOne
+    @JoinColumn(name="company_id", nullable=false)
+    public Company getCompany() {
+        return company;
+    }
+
+    public void setCompany(Company company) {
+        this.company = company;
     }
 }
