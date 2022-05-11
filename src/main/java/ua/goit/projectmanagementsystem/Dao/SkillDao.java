@@ -2,7 +2,6 @@ package ua.goit.projectmanagementsystem.Dao;
 
 import ua.goit.projectmanagementsystem.config.DatabaseManager;
 import ua.goit.projectmanagementsystem.model.domain.Skill;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

@@ -1,15 +1,12 @@
 package ua.goit.projectmanagementsystem.service;
 
-import com.oracle.wls.shaded.org.apache.xalan.xsltc.runtime.ErrorMessages_es;
 import jakarta.servlet.http.HttpServletRequest;
 import ua.goit.projectmanagementsystem.Dao.CompanyDao;
 import ua.goit.projectmanagementsystem.Dao.DeveloperDao;
 import ua.goit.projectmanagementsystem.Dao.ProjectDao;
 import ua.goit.projectmanagementsystem.model.ErrorMessage;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class Validator {
     private static Validator instance;

@@ -1,6 +1,5 @@
 package ua.goit.projectmanagementsystem.service;
 
-import ua.goit.projectmanagementsystem.Dao.CompanyDao;
 import ua.goit.projectmanagementsystem.exception.CompanyNotFoundException;
 import ua.goit.projectmanagementsystem.model.domain.DeveloperProject;
 import ua.goit.projectmanagementsystem.Dao.DeveloperProjectDao;

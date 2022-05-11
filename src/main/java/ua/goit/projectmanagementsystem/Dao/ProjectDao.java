@@ -2,15 +2,7 @@ package ua.goit.projectmanagementsystem.Dao;
 
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.Query;
-import jakarta.persistence.TypedQuery;
-import ua.goit.projectmanagementsystem.config.DatabaseManager;
-import ua.goit.projectmanagementsystem.exception.DeveloperNotFoundException;
-import ua.goit.projectmanagementsystem.model.domain.Company;
-import ua.goit.projectmanagementsystem.model.domain.Developer;
 import ua.goit.projectmanagementsystem.model.domain.Project;
-import ua.goit.projectmanagementsystem.model.domain.Skill;
-
-import java.sql.*;
 import java.util.*;
 
 public class ProjectDao extends AbstractDao<Project>{

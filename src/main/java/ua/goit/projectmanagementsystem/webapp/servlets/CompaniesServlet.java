@@ -6,22 +6,14 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import ua.goit.projectmanagementsystem.Dao.DeveloperDao;
-import ua.goit.projectmanagementsystem.Dao.ProjectDao;
-import ua.goit.projectmanagementsystem.config.DatabaseManager;
-import ua.goit.projectmanagementsystem.config.PostgresHikariProvider;
-import ua.goit.projectmanagementsystem.config.PropertiesUtil;
 import ua.goit.projectmanagementsystem.model.ErrorMessage;
 import ua.goit.projectmanagementsystem.model.domain.Company;
 import ua.goit.projectmanagementsystem.model.domain.Developer;
-import ua.goit.projectmanagementsystem.Dao.CompanyDao;
 import ua.goit.projectmanagementsystem.service.CompanyService;
 import ua.goit.projectmanagementsystem.service.DeveloperService;
 import ua.goit.projectmanagementsystem.service.Validator;
-
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @WebServlet(urlPatterns = "/companies/*")
 public class CompaniesServlet extends HttpServlet {
@@ -67,7 +59,7 @@ public class CompaniesServlet extends HttpServlet {
         company.setCompanyLocation(companyLocation);
 
         if (Objects.isNull(companyId)) {
-            companyId = companyService.save(company);
+            companyService.save(company);
         } else {
             companyService.update(company);
         }
@@ -143,8 +135,6 @@ public class CompaniesServlet extends HttpServlet {
     private void handleId(Integer id, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Company company = companyService.findById(id);
         req.setAttribute("company", company);
-        //Set<Developer> developers = company.getDevelopers();
-        //req.setAttribute("developers", developers);
         List<Developer> unemployedDevelopers = developerService.findAllUnemployed();
         req.setAttribute("unemployedDevelopers", unemployedDevelopers);
         req.setCharacterEncoding("UTF-8");

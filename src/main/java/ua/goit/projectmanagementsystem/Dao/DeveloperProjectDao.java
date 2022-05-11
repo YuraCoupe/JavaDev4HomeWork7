@@ -1,12 +1,7 @@
 package ua.goit.projectmanagementsystem.Dao;
 
 import jakarta.persistence.TypedQuery;
-import ua.goit.projectmanagementsystem.config.DatabaseManager;
-import ua.goit.projectmanagementsystem.model.domain.Developer;
 import ua.goit.projectmanagementsystem.model.domain.DeveloperProject;
-
-import java.sql.*;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 

@@ -1,19 +1,10 @@
 package ua.goit.projectmanagementsystem.Dao;
 
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.TypedQuery;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import org.hibernate.Session;
-import org.hibernate.transform.Transformers;
-import ua.goit.projectmanagementsystem.config.DatabaseManager;
 import ua.goit.projectmanagementsystem.config.PersistenceProvider;
 import ua.goit.projectmanagementsystem.model.domain.Company;
-
-import java.sql.*;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 

@@ -9,7 +9,6 @@ import ua.goit.projectmanagementsystem.Dao.CompanyDao;
 import ua.goit.projectmanagementsystem.Dao.DeveloperDao;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class DeveloperService {
 
