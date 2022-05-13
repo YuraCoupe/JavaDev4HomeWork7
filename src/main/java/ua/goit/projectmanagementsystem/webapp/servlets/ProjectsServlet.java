@@ -8,7 +8,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import ua.goit.projectmanagementsystem.model.ErrorMessage;
 import ua.goit.projectmanagementsystem.model.domain.Company;
 import ua.goit.projectmanagementsystem.model.domain.Developer;
-import ua.goit.projectmanagementsystem.model.domain.DeveloperProject;
 import ua.goit.projectmanagementsystem.model.domain.Project;
 import ua.goit.projectmanagementsystem.service.*;
 import java.io.IOException;
@@ -22,7 +21,6 @@ public class ProjectsServlet extends HttpServlet {
     private ProjectService projectService;
     private CompanyService companyService;
     private DeveloperService developerService;
-    private DeveloperProjectService developerProjectService;
     private Validator validator;
 
 
@@ -31,7 +29,6 @@ public class ProjectsServlet extends HttpServlet {
         this.projectService = (ProjectService) getServletContext().getAttribute("projectService");
         this.companyService = (CompanyService) getServletContext().getAttribute("companyService");
         this.developerService = (DeveloperService) getServletContext().getAttribute("developerService");
-        this.developerProjectService = (DeveloperProjectService) getServletContext().getAttribute("developerProjectService");
         validator = (Validator) getServletContext().getAttribute("validator");
     }
 
@@ -43,7 +40,7 @@ public class ProjectsServlet extends HttpServlet {
 
         if (!req.getParameter("projectId").isBlank()) {
             projectId = Integer.parseInt(req.getParameter("projectId"));
-            project.setProjectId(projectId);
+            project = projectService.findById(projectId);
         }
 
         ErrorMessage errorMessage = validator.validateProject(req);
@@ -68,19 +65,17 @@ public class ProjectsServlet extends HttpServlet {
         project.setCompany(company);
         project.setProjectCost(Integer.parseInt(projectCost));
 
-        if (Objects.isNull(projectId)) {
-            projectId = projectService.save(project);
-        } else {
-            projectService.update(project);
-        }
-
         Integer developerId;
         if (Objects.nonNull(req.getParameter("developerId"))) {
             developerId = Integer.parseInt(req.getParameter("developerId"));
-            DeveloperProject developerProject = new DeveloperProject();
-            developerProject.setDeveloperId(developerId);
-            developerProject.setProjectId(projectId);
-            developerProjectService.save(developerProject);
+            Developer developer = developerService.findById(developerId);
+            project.getDevelopers().add(developer);
+        }
+
+        if (Objects.isNull(projectId)) {
+            projectService.save(project);
+        } else {
+            projectService.update(project);
         }
         resp.sendRedirect("/projects");
     }
@@ -104,8 +99,9 @@ public class ProjectsServlet extends HttpServlet {
                 Integer id = Integer.parseInt(idStr);
                 String removeId = req.getParameter("removeId");
                 if (removeId != null) {
-                    DeveloperProject developerProject = developerProjectService.findByIds(Integer.parseInt(removeId), id);
-                    developerProjectService.delete(developerProject);
+                    Project project = projectService.findById(id);
+                    project.getDevelopers().remove(developerService.findById(Integer.parseInt(removeId)));
+                    projectService.update(project);
                 }
                 handleId(id, req, resp);
             } catch (RuntimeException e) {

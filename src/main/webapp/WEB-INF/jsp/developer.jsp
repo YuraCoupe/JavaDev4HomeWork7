@@ -47,6 +47,16 @@
                         </select><br>
                         <label for="salary">Salary, USD:</label><br>
                         <input type="number" class="form-control" id="salary" placeholder="Enter salary" name="salary" value="${developer.salary}"><br>
+                        <label for="project">Add project:</label><br>
+                            <select class="form-control" id="projectId" name="projectId">
+                                <option disabled selected value> -- select project -- </option>
+                                <c:forEach items="${projectsWithoutThisDeveloper}" var="projectWithoutThisDeveloper">
+                                    <option value="${projectWithoutThisDeveloper.projectId}">
+                                        <c:out value="${projectWithoutThisDeveloper.projectName}"/>
+                                    </option>
+                                </c:forEach>
+                            </select><br>
+
                     </div>
                     <div class="row">
                         <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">

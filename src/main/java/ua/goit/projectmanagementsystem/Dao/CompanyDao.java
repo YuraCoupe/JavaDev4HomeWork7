@@ -39,7 +39,6 @@ public class CompanyDao extends AbstractDao<Company> {
     }
 
     public List<Company> findAllExUnemployed() {
-        em.clear();
         TypedQuery<Company> query = em.createQuery(FIND_ALL_EX_UNEMPLOYED, Company.class);
         return query.getResultList();
     }

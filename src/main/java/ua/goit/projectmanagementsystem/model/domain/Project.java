@@ -56,7 +56,12 @@ public class Project {
         this.projectCost = projectCost;
     }
 
-    @ManyToMany(mappedBy = "projects")
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @JoinTable(
+            name = "developerstoprojects",
+            joinColumns = { @JoinColumn(name = "project_id") },
+            inverseJoinColumns = { @JoinColumn(name = "developer_id") }
+    )
     public Set<Developer> getDevelopers() {
         return developers;
     }

@@ -21,7 +21,7 @@
             <property name="jakarta.persistence.jdbc.password" value="12345"/>
             <property name="hibernate.connection.autocommit" value="true" />
 
-            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.show_sql" value="false"/>
 
         </properties>
 

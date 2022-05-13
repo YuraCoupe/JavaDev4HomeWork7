@@ -8,7 +8,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import ua.goit.projectmanagementsystem.model.ErrorMessage;
 import ua.goit.projectmanagementsystem.model.domain.Company;
 import ua.goit.projectmanagementsystem.model.domain.Developer;
-import ua.goit.projectmanagementsystem.model.domain.DeveloperProject;
 import ua.goit.projectmanagementsystem.model.domain.Project;
 import ua.goit.projectmanagementsystem.service.*;
 import java.io.IOException;
@@ -21,7 +20,6 @@ public class DevelopersServlet extends HttpServlet {
     private DeveloperService developerService;
     private CompanyService companyService;
     private ProjectService projectService;
-    private DeveloperProjectService developerProjectService;
     private Validator validator;
 
     @Override
@@ -30,7 +28,6 @@ public class DevelopersServlet extends HttpServlet {
         this.developerService = (DeveloperService) getServletContext().getAttribute("developerService");
         this.companyService = (CompanyService) getServletContext().getAttribute("companyService");
         this.projectService = (ProjectService) getServletContext().getAttribute("projectService");
-        this.developerProjectService = (DeveloperProjectService) getServletContext().getAttribute("developerProjectService");
         this.validator = (Validator) getServletContext().getAttribute("validator");
     }
 
@@ -68,10 +65,18 @@ public class DevelopersServlet extends HttpServlet {
         developer.setCompany(company);
         developer.setSalary(salary);
 
+
         if (Objects.isNull(developerId)) {
             developerService.save(developer);
         } else {
             developerService.update(developer);
+        }
+        Integer projectId;
+        if (Objects.nonNull(req.getParameter("projectId"))) {
+            projectId = Integer.parseInt(req.getParameter("projectId"));
+            Project project = projectService.findById(projectId);
+            project.getDevelopers().add(developer);
+            projectService.update(project);
         }
         resp.sendRedirect("/developers");
     }
@@ -96,8 +101,9 @@ public class DevelopersServlet extends HttpServlet {
                 Integer id = Integer.parseInt(idStr);
                 String removeId = req.getParameter("removeId");
                 if (removeId != null) {
-                    DeveloperProject developerProject = developerProjectService.findByIds(id, Integer.parseInt(removeId));
-                    developerProjectService.delete(developerProject);
+                    Project project = projectService.findById(Integer.parseInt(removeId));
+                    project.getDevelopers().remove(developerService.findById(id));
+                    projectService.update(project);
                 }
                 handleId(id, req, resp);
             } catch (RuntimeException e) {

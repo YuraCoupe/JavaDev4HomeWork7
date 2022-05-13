@@ -27,14 +27,6 @@ public class DeveloperService {
         return instance;
     }
 
-    public Developer findByName(String firstName, String lastName) {
-        Developer developer = developerDAO.findByName(firstName, lastName).orElseThrow(()
-                -> new CompanyNotFoundException(String.format("Developer %s %s does not exist", firstName, lastName)));
-        Company company = companyDAO.findById(developer.getCompany().getCompanyId()).orElseThrow(()
-                -> new CompanyNotFoundException(String.format("Company does not exist")));
-        return developer;
-    }
-
     public void save(Developer developer) {
         if (developerDAO.findByName(developer.getFirstName(), developer.getLastName()).isEmpty()) {
             developerDAO.create(developer);

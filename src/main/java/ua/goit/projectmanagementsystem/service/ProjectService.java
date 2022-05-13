@@ -2,6 +2,7 @@ package ua.goit.projectmanagementsystem.service;
 
 import ua.goit.projectmanagementsystem.exception.CompanyAlreadyExistException;
 import ua.goit.projectmanagementsystem.exception.CompanyNotFoundException;
+import ua.goit.projectmanagementsystem.exception.ProjectAlreadyExistException;
 import ua.goit.projectmanagementsystem.exception.ProjectNotFoundException;
 import ua.goit.projectmanagementsystem.model.domain.Project;
 import ua.goit.projectmanagementsystem.Dao.CompanyDao;
@@ -30,7 +31,7 @@ public class ProjectService {
         if (projectDao.findByName(project.getProjectName()).isEmpty()) {
             id = projectDao.create(project).getProjectId();
         } else {
-            throw new CompanyAlreadyExistException("This project already exists");
+            throw new ProjectAlreadyExistException("This project already exists");
         }
         return id;
     }

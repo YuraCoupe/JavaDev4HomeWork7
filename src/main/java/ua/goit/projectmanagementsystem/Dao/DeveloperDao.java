@@ -41,14 +41,12 @@ public class DeveloperDao extends AbstractDao<Developer>{
     }
 
     public List<Developer> findWithoutThisProjectId(Integer projectId) {
-        em.clear();
         Query query = em.createNativeQuery(FIND_DEVELOPERS_EXCLUDING_CURRENT_PROJECT, Developer.class)
                 .setParameter(1, projectId);
         return (List<Developer>) query.getResultList();
     }
 
     public List<Developer> findAllUnemployed() {
-        em.clear();
         TypedQuery<Developer> query = em.createQuery(FIND_ALL_UNEMPLOYED, Developer.class);
         return query.getResultList();
     }

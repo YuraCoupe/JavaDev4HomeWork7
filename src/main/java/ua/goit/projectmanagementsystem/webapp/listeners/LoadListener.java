@@ -11,12 +11,10 @@ public class LoadListener implements ServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
-//        DbMigration.migrate();
         ServletContext servletContext = sce.getServletContext();
         servletContext.setAttribute("companyService", CompanyService.getInstance());
         servletContext.setAttribute("developerService", DeveloperService.getInstance());
         servletContext.setAttribute("projectService", ProjectService.getInstance());
-        servletContext.setAttribute("developerProjectService", DeveloperProjectService.getInstance());
         servletContext.setAttribute("validator", Validator.getInstance());
 
     }

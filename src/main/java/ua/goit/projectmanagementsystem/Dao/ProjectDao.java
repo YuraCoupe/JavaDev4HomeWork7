@@ -15,20 +15,6 @@ public class ProjectDao extends AbstractDao<Project>{
                     "JOIN developerstoprojects dtp ON p.project_id = dtp.project_id\n" +
                     "WHERE dtp.developer_id = ?;";
 
-    private final static String FIND_DEVELOPERS_BY_PROJECT_ID =
-            "SELECT pr.project_id, pr.project_name, d.developer_id, d.first_name, d.last_name, d.age, d.sex, d.company_id, d.salary\n" +
-            "FROM projects pr\n" +
-            "JOIN developersToProjects dtp ON dtp.project_id = pr.project_id \n" +
-            "JOIN developers d ON dtp.developer_id = d.developer_id \n" +
-            "WHERE pr.project_id = ?";
-
-    private final static String FIND_ALL_JOIN =
-            "SELECT dtp.project_id, p.project_name, p.company_id, p.customer_id, p.project_cost, COUNT(d.developer_id) as developers_number\n" +
-            "FROM developerstoprojects dtp\n" +
-            "JOIN developers d ON dtp.developer_id = d.developer_id\n" +
-            "JOIN projects p ON dtp.project_id = p.project_id\n" +
-            "GROUP BY dtp.project_id, p.project_name, p.company_id, p.customer_id, p.project_cost";
-
     private static ProjectDao instance;
 
     private ProjectDao() {
@@ -54,7 +40,6 @@ public class ProjectDao extends AbstractDao<Project>{
     }
 
     public List<Project> findWithoutThisDeveloperId(Integer developerId) {
-        em.clear();
         Query query = em.createNativeQuery(FIND_PROJECTS_EXCLUDING_CURRENT_DEVELOPER, Project.class)
                 .setParameter(1, developerId);
         return (List<Project>) query.getResultList();

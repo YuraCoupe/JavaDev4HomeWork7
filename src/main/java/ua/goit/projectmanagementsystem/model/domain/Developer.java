@@ -95,12 +95,8 @@ public class Developer {
 //        this.skills = skills;
 //    }
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    @JoinTable(
-            name = "developerstoprojects",
-            joinColumns = { @JoinColumn(name = "developer_id") },
-            inverseJoinColumns = { @JoinColumn(name = "project_id") }
-    )
+
+    @ManyToMany(mappedBy = "developers", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     public Set<Project> getProjects() {
         return projects;
     }
